@@ -110,6 +110,9 @@ body {
   .text {
     @apply text-v800;
   }
+  .fondo {
+    @apply bg-v50;
+  }
   .title {
     @apply font-serif font-bold text-3xl text-v900 mb-2 !important;
   }

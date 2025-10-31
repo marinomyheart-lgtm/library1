@@ -10,13 +10,7 @@ import { MarkdownEditor } from "./MarkdownEditor"
 import { MarkdownViewer } from "./MarkdownViewer"
 import { Edit, Plus, X } from "lucide-react"
 import { supabase } from "@/lib/supabaseClient"
-
-export interface Quote {
-  text: string
-  page: string
-  type: string
-  category: string
-}
+import type { Quote } from "@/lib/types"  
 
 interface QuotesSectionProps {
   quotes: Quote[]
@@ -27,7 +21,7 @@ interface QuotesSectionProps {
 export function QuotesSection({ quotes, onQuotesChange, className = "" }: QuotesSectionProps) {
   const [quoteInput, setQuoteInput] = useState({
     text: "",
-    page: "",
+    page: "" as string | number, // Permitir ambos tipos temporalmente
     type: "",
     category: [] as string[],
   })
@@ -67,7 +61,7 @@ export function QuotesSection({ quotes, onQuotesChange, className = "" }: Quotes
     if (quoteInput.text.trim()) {
       const newQuote: Quote = {
         text: quoteInput.text.trim(),
-        page: quoteInput.page.trim(),
+        page: quoteInput.page ? Number(quoteInput.page) : undefined, // Convertir a número
         type: quoteInput.type.trim() || "General",
         category: quoteInput.category.length > 0 ? quoteInput.category.join(", ") : "",
       }
@@ -102,6 +96,7 @@ export function QuotesSection({ quotes, onQuotesChange, className = "" }: Quotes
           </div>
           <div className="space-y-2">
             <Input
+              type="number"
               value={quoteInput.page}
               onChange={(e) => setQuoteInput((prev) => ({ ...prev, page: e.target.value }))}
               placeholder="Página"
@@ -191,8 +186,12 @@ function QuoteItem({ quote, index, onUpdate, onRemove, typesOptions, categoriesO
         />
         <div className="grid grid-cols-3 gap-2">
           <Input
-            value={editQuote.page}
-            onChange={(e) => setEditQuote(prev => ({ ...prev, page: e.target.value }))}
+            type="number"
+            value={editQuote.page || ""}
+            onChange={(e) => setEditQuote(prev => ({ 
+              ...prev, 
+              page: e.target.value ? Number(e.target.value) : undefined 
+            }))}
             placeholder="Página"
             className="input"
           />

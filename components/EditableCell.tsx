@@ -9,7 +9,7 @@
   import { Button } from "@/components/ui/button"
   import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
   import { Calendar } from "@/components/ui/calendar"
-  import { CalendarIcon, X, ImageIcon } from "lucide-react"
+  import { CalendarIcon, X } from "lucide-react"
   import { cn } from "@/lib/utils"
   import { format } from "date-fns"
   import { AVAILABLE_COLORS, getConsistentColorIndex } from "@/lib/colors";

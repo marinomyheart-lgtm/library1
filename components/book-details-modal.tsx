@@ -1,5 +1,5 @@
 "use client"
-import { Star, BookOpen, Users, Heart, QuoteIcon, Calendar, UserPlus, PenLine, Plus, File, Circle, StarHalf } from "lucide-react"
+import { BookOpen, Users, Heart, QuoteIcon, Calendar, UserPlus, PenLine, Plus, File, Circle } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
@@ -289,7 +289,7 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
         const quotesToInsert = quotesToSave.map((quote) => ({
           book_id: book.id,
           text: quote.text,
-          page: quote.page ? Number.parseInt(quote.page) : null,
+          page: quote.page ?? null,
           type: quote.type || null,
           category: quote.category || null,
           favorite: false,
@@ -422,7 +422,7 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
         className="bg-white/60 rounded-lg p-3 cursor-pointer hover:bg-white/80 transition-colors group relative"
         onClick={() => setEditingField({ section: "opinion", field: "summary" })}
       >
-        <p className="text-sm mt-1 italic text-purple-700">
+        <p className="text-sm mt-1 italic text-v700">
           {book.summary ? `"${book.summary}"` : "No hay resumen disponible"}
         </p>
       </div>
@@ -436,7 +436,7 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
     if (isEditing) {
       return (
         <div className="bg-white/60 rounded-lg p-3">
-          <Label className="text-xs font-semibold text-purple-500 uppercase tracking-wide">
+          <Label className="text-xs font-semibold text-v500 uppercase tracking-wide">
             Personajes Principales
           </Label>
           <div className="mt-1">
@@ -458,7 +458,6 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
         className="bg-white/60 rounded-lg p-3 cursor-pointer hover:bg-white/80 transition-colors group relative"
         onClick={() => setEditingField({ section: "characters", field: "main_characters" })}
       >
-        <Label className="text-xs font-semibold text-purple-500 uppercase tracking-wide">Personajes Principales</Label>
         {book.main_characters ? (
           <ul className="space-y-3 mt-1">
             {book.main_characters.split(",").map((character, index) => (
@@ -600,16 +599,16 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
 
     return (
       <div
-        className="cursor-pointer group relative min-h-[60px] rounded-lg border-2 border-dashed border-transparent group-hover:border-purple-200 transition-all flex items-center justify-center"
+        className="cursor-pointer group relative min-h-[60px] rounded-lg border-2 border-dashed border-transparent group-hover:bordes transition-all flex items-center justify-center"
         onClick={() => setEditingField({ section: "left", field: "author" })}
       >
         {hasAuthor ? (
           <div className="bg-white/60 rounded-lg p-3 w-full">
-            <p className="text-sm mt-1 font-semibold text-purple-900">{book.author?.name}</p>
+            <p className="text-sm mt-1 font-semibold text">{book.author?.name}</p>
           </div>
         ) : (
           <div className="flex items-center justify-center h-full opacity-60 group-hover:opacity-100 transition-opacity w-full">
-            <div className="text-center text-gray-400 group-hover:text-purple-500 transition-colors">
+            <div className="text-center text-gray-400 group-hover:text-v500 transition-colors">
               <UserPlus className="w-6 h-6 mx-auto mb-1" />
             </div>
           </div>
@@ -681,7 +680,7 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
         className="cursor-pointer group relative text-center"
         onClick={() => setEditingField({ section: "header", field: "title" })}
       >
-        <h3 className="text-lg font-bold text-purple-800">{book.title}</h3>
+        <h3 className="text-lg font-bold text">{book.title}</h3>
       </div>
     )
   }
@@ -706,16 +705,16 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
 
     return (
       <div
-        className="cursor-pointer group relative min-h-[60px] rounded-lg border-2 border-dashed border-transparent group-hover:border-purple-200 transition-all"
+        className="cursor-pointer group relative min-h-[60px] rounded-lg border-2 border-dashed border-transparent group-hover:bordes transition-all"
         onClick={() => setEditingField({ section: "left", field: "review" })}
       >
         {hasReview ? (
           <div className="bg-purple-50 p-3 rounded-lg">
-            <p className="text-sm italic text-purple-700">"{book.review}"</p>
+            <p className="text-sm italic text-v700">"{book.review}"</p>
           </div>
         ) : (
           <div className="flex items-center justify-center h-full opacity-60 group-hover:opacity-100 transition-opacity">
-            <div className="text-center text-gray-400 group-hover:text-purple-500 transition-colors">
+            <div className="text-center text-gray-400 group-hover:text-v500 transition-colors">
               <PenLine className="w-6 h-6 mx-auto mb-1" />
             </div>
           </div>
@@ -746,19 +745,19 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
           </div>
         ) : (
           <div
-            className="flex items-center justify-center gap-1 cursor-pointer group p-2 rounded-lg hover:bg-purple-50 transition-colors"
+            className="flex items-center justify-center gap-1 cursor-pointer group p-2 rounded-lg hover:fondo transition-colors"
             onClick={() => setEditingField({ section: "left", field: "rating" })}
           >
             {hasRating ? (
               <StarRating 
                 rating={book.rating!} 
                 size={5}
-                className="group-hover:text-purple-600 transition-colors"
+                className="group-hover:text-v600 transition-colors"
               />
             ) : (
               <EmptyStarRating 
                 size={5}
-                className="group-hover:text-purple-600 transition-colors"
+                className="group-hover:text-v600 transition-colors"
               />
             )}
           </div>
@@ -801,7 +800,7 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
 
     return (
       <div
-        className="flex flex-wrap gap-1 justify-center cursor-pointer group relative min-h-[32px] items-center rounded-lg border-2 border-dashed border-transparent group-hover:border-purple-200 transition-all p-1"
+        className="flex flex-wrap gap-1 justify-center cursor-pointer group relative min-h-[32px] items-center rounded-lg border-2 border-dashed border-transparent group-hover:bordes transition-all p-1"
         onClick={() => setEditingField({ section: "left", field: "genre" })}
       >
         {hasGenres ? (
@@ -813,7 +812,7 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
           ))
         ) : (
           <div className="flex items-center justify-center opacity-60 group-hover:opacity-100 transition-opacity">
-            <div className="text-center text-gray-400 group-hover:text-purple-500 transition-colors">
+            <div className="text-center text-gray-400 group-hover:text-v500 transition-colors">
               <Plus className="w-6 h-6 mx-auto mb-1" />
             </div>
           </div>
@@ -834,13 +833,13 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
         )}
 
         <DialogHeader className="flex-shrink-0">
-          <DialogTitle className="text-2xl font-bold text-purple-800">{book.title}</DialogTitle>
+          <DialogTitle className="title">{book.title}</DialogTitle>
         </DialogHeader>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
           {/* Book Cover and Basic Info - Fixed height */}
           <div className="lg:col-span-1">
-            <Card className={`bg-white/80 border-0 shadow-lg h-full ${isEditingLeftColumn ? "" : "backdrop-blur-sm"}`}>
+            <Card className="bg-transparent border-none shadow-none h-full">
               <CardContent className="p-6 h-full flex flex-col">
                 <div className="text-center space-y-4 flex-1">
                   {renderImageField()}
@@ -864,11 +863,31 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
           {/* Tabs Content - Fixed height with scroll */}
           <div className="lg:col-span-2 flex flex-col min-h-0">
             <Tabs defaultValue="summary" className="space-y-6 flex flex-col h-full">
-              <TabsList className="grid w-full grid-cols-4 bg-white/80 flex-shrink-0">
-                <TabsTrigger value="summary">Information</TabsTrigger>
-                <TabsTrigger value="opinion">Summary</TabsTrigger>
-                <TabsTrigger value="characters">Personajes</TabsTrigger>
-                <TabsTrigger value="quotes">Citas</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-4 bg-transparent flex-shrink-0">
+                {[
+                  { value: "summary", label: "Information" },
+                  { value: "opinion", label: "Summary" },
+                  { value: "characters", label: "Personajes" },
+                  { value: "quotes", label: "Citas" },
+                ].map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className="
+                      relative pb-2 pt-2 text-sm font-medium text-gray-600
+                      hover:text-v700 transition-colors duration-150
+                      data-[state=active]:text-v700
+                      data-[state=active]:bg-transparent
+                      data-[state=active]:shadow-none
+                      focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0
+                      after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2
+                      after:h-[2px] after:w-3/4 after:bg-v600 after:scale-x-0
+                      data-[state=active]:after:scale-x-100 after:transition-transform after:duration-300 after:ease-out
+                    "
+                  >
+                    {tab.label}
+                  </TabsTrigger>
+                ))}
               </TabsList>
 
               {/* Fixed height content area with scroll */}
