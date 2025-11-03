@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef, useMemo, useEffect } from "react" // Agregar useEffect
+import { useState, useRef, useMemo, useEffect } from "react" 
 import { Check, ChevronsUpDown, Plus, X, Trash2 } from "lucide-react"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
@@ -25,6 +25,7 @@ interface MultiSelectProps {
   returnId?: boolean
   columnId?: string
   autoOpen?: boolean // Nueva prop para auto-abrir
+  onKeyDown?: (e: React.KeyboardEvent) => void
 }
 
 const colorClasses = AVAILABLE_COLORS;
@@ -41,7 +42,8 @@ export function MultiSelect({
   refreshOptions,
   returnId = false,
   columnId = "multiselect",
-  autoOpen = false, // Valor por defecto
+  autoOpen = false,
+  onKeyDown,
 }: MultiSelectProps) {
   const [open, setOpen] = useState(false)
   const [inputValue, setInputValue] = useState("")
@@ -216,13 +218,6 @@ export function MultiSelect({
     }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && inputValue.trim() && creatable) {
-      handleCreate()
-      e.preventDefault()
-    }
-  }
-
   // Función auxiliar para verificar si una opción está seleccionada
   const isOptionSelected = (optionValue: string) => {
     return selected.includes(optionValue);
@@ -298,7 +293,7 @@ export function MultiSelect({
               placeholder=""
               value={inputValue}
               onValueChange={setInputValue}
-              onKeyDown={handleKeyDown}
+              onKeyDown={onKeyDown}
               className="border-0 focus:ring-0 focus:outline-none rounded-t-xl h-6 py-1 text-xs"
             />
             <CommandList className="max-h-64">

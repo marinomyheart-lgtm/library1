@@ -12,7 +12,6 @@
   import { CalendarIcon, X } from "lucide-react"
   import { cn } from "@/lib/utils"
   import { format } from "date-fns"
-  import { AVAILABLE_COLORS, getConsistentColorIndex } from "@/lib/colors";
 
   interface EditableCellProps {
     book: Book
@@ -23,28 +22,6 @@
     onCancel: () => void
     refreshOptions?: () => Promise<void>
   }
-
-  const availableColors = AVAILABLE_COLORS;
-
-  // Función para obtener estilos de color consistentes
-  const getBadgeStyle = (value: string, columnId: string) => {
-    if (!value) {
-      return {
-        backgroundColor: availableColors[0].bg,
-        borderColor: availableColors[0].border.replace('border-', '#'),
-        color: availableColors[0].text.replace('text-', '#')
-      };
-    }
-    
-    const colorIndex = getConsistentColorIndex(value, columnId, availableColors.length);
-    const colorClass = availableColors[colorIndex];
-    return {
-      backgroundColor: colorClass.bg,
-      borderColor: colorClass.border.replace('border-', '#'),
-      color: colorClass.text.replace('text-', '#')
-    };
-  };
-
   export const EditableCell: React.FC<EditableCellProps> = ({
     book,
     columnId,
@@ -57,7 +34,6 @@
     const [editValue, setEditValue] = useState<any>(value)
     const inputRef = useRef<HTMLInputElement>(null)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
-    const multiSelectRef = useRef<any>(null)
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
     const [autoOpenMultiSelect, setAutoOpenMultiSelect] = useState(false)
 
@@ -249,13 +225,6 @@
       }
     }
 
-    const commonInputProps = {
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) => setEditValue(e.target.value),
-      onKeyDown: handleKeyDown,
-      className: "w-[250px] text-sm px-3 py-2",
-      ref: inputRef
-    }
-
     const getTableName = (columnId: string) => {
       switch (columnId) {
         case "author": return "authors"
@@ -313,7 +282,6 @@
     const renderMultiSelect = (props: any = {}) => (
       <div className="absolute z-50 bg-white shadow-lg rounded-md border min-w-[250px]">
         <MultiSelect
-          ref={multiSelectRef}
           options={props.options || options}
           selected={props.selected || (editValue ? [editValue] : [])}
           onChange={props.onChange || handleMultiSelectChange}
