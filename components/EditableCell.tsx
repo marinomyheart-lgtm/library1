@@ -350,23 +350,45 @@
       </div>
     )
     const renderTextarea = (width: string, minHeight: string, placeholder?: string) => (
-      <Textarea
-        value={editValue || ""}
-        onChange={(e) => setEditValue(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && e.ctrlKey) {
-            e.preventDefault()
-            handleSave()
-          }
-          if (e.key === "Escape") {
-            onCancel()
-          }
-        }}
-        className={`absolute z-50 ${width} text-xs px-2 py-1 bg-white shadow-sm ${minHeight} resize-none border-0 focus:ring-offset-0`}
-        placeholder={placeholder}
-        ref={textareaRef}
-      />
-    )
+      <div 
+        className={`absolute z-50 bg-white rounded-md border p-2 ${width}`}
+      >
+        <Textarea
+          value={editValue || ""}
+          onChange={(e) => setEditValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && e.ctrlKey) {
+              e.preventDefault()
+              handleSave()
+            }
+            if (e.key === "Escape") {
+              onCancel()
+            }
+          }}
+          className={`w-full text-xs px-2 py-1 bg-white ${minHeight} resize-none border-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0`}
+          placeholder={placeholder}
+          ref={textareaRef}
+        />
+        {/* BOTONES */}
+        <div className="p-1 border-t flex justify-end gap-1 text-xs mt-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-6 px-2 border-violet-300 text-violet-400 hover:bg-violet-100 text-xs"
+            onClick={onCancel}
+          >
+            Cancelar
+          </Button>
+          <Button
+            size="sm"
+            className="h-6 px-2 bg-violet-200 text-violet-700 hover:bg-violet-300 text-xs"
+            onClick={() => handleSave()}
+          >
+            Guardar
+          </Button>
+        </div>
+      </div>
+    )    
     
     switch (columnId) {
       case "title":

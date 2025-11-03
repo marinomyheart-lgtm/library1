@@ -396,39 +396,6 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
     )
   }
 
-  const renderSummaryField = () => {
-    if (!book) return null
-    const isEditing = editingField?.section === "opinion" && editingField?.field === "summary"
-
-    if (isEditing) {
-      return (
-        <div className="bg-white/60 rounded-lg p-3 relative" style={{ zIndex: 10000 }}>
-          <div className="mt-1">
-            <EditableCell
-              book={book!}
-              columnId="summary"
-              value={book.summary}
-              options={[]}
-              onSave={(newValue) => handleSave("summary", newValue)}
-              onCancel={() => setEditingField(null)}
-            />
-          </div>
-        </div>
-      )
-    }
-
-    return (
-      <div
-        className="bg-white/60 rounded-lg p-3 cursor-pointer hover:bg-white/80 transition-colors group relative"
-        onClick={() => setEditingField({ section: "opinion", field: "summary" })}
-      >
-        <p className="text-sm mt-1 italic text-v700">
-          {book.summary ? `"${book.summary}"` : "No hay resumen disponible"}
-        </p>
-      </div>
-    )
-  }
-
   const renderMainCharactersField = () => {
     if (!book) return null
     const isEditing = editingField?.section === "characters" && editingField?.field === "main_characters"
@@ -685,37 +652,43 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
     )
   }
 
-  const renderReviewField = () => {
+  const renderReviewField = (field: "review" | "summary", label?: string, placeholder?: string) => {
     if (!book) return null
-    const isEditing = editingField?.section === "left" && editingField?.field === "review"
-    const hasReview = !!book.review
+    const isEditing = editingField?.section === "left" && editingField?.field === field
+    const hasContent = !!book[field]
 
     if (isEditing) {
       return (
+        <div
+          className="cursor-pointer group relative min-h-[60px] rounded-lg border-2 border-dashed border-transparent group-hover:bordes transition-all bg-white/80 p-3"
+          style={field === "summary" ? { zIndex: 9999 } : undefined}
+        >
           <EditableCell
             book={book!}
-            columnId="review"
-            value={book.review}
+            columnId={field}
+            value={book[field]}
             options={[]}
-            onSave={(newValue) => handleSave("review", newValue)}
+            onSave={(newValue) => handleSave(field, newValue)}
             onCancel={() => setEditingField(null)}
           />
+        </div>
       )
     }
 
     return (
       <div
         className="cursor-pointer group relative min-h-[60px] rounded-lg border-2 border-dashed border-transparent group-hover:bordes transition-all"
-        onClick={() => setEditingField({ section: "left", field: "review" })}
+        onClick={() => setEditingField({ section: "left", field })}
       >
-        {hasReview ? (
+        {hasContent ? (
           <div className="bg-purple-50 p-3 rounded-lg">
-            <p className="text-sm italic text-v700">"{book.review}"</p>
+            <p className="text-sm italic text-v700">"{book[field]}"</p>
           </div>
         ) : (
           <div className="flex items-center justify-center h-full opacity-60 group-hover:opacity-100 transition-opacity">
             <div className="text-center text-gray-400 group-hover:text-v500 transition-colors">
               <PenLine className="w-6 h-6 mx-auto mb-1" />
+              <span className="text-xs">{label || `Agregar ${field === "review" ? "reseña" : "resumen"}`}</span>
             </div>
           </div>
         )}
@@ -854,7 +827,7 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
                   {book.rating !== undefined && renderRatingAndFavoriteField()}
 
                   {/* One line summary */}
-                  {renderReviewField()}
+                  {renderReviewField("review", "Agregar reseña")}
                 </div>
               </CardContent>
             </Card>
@@ -996,16 +969,16 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
 
                 {/* Resumen */}
                 <TabsContent value="opinion" className="h-full overflow-y-auto">
-                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg h-full">
+                  <Card
+                    className={`border-0 shadow-lg h-full ${editingField?.section === "left" && editingField?.field === "summary" ? "bg-white/80" : "bg-white/80 backdrop-blur-sm"}`}
+                  >
                     <CardHeader>
                       <CardTitle className="text-purple-800 flex items-center gap-2">
                         <File className="h-5 w-5" />
                         Resumen
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="flex-1">
-                      <div className="h-full overflow-y-auto">{renderSummaryField()}</div>
-                    </CardContent>
+                    <CardContent className="flex-1">{renderReviewField("summary", "Agregar resumen")}</CardContent>
                   </Card>
                 </TabsContent>
 

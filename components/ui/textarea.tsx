@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils"
 
 const Textarea = React.forwardRef<
   HTMLTextAreaElement,
-  React.ComponentProps<"textarea">
->(({ className, ...props }, ref) => {
+  React.ComponentProps<"textarea"> & { autoFocus?: boolean }
+>(({ className, autoFocus = true, ...props }, ref) => { // ← autoFocus = true por defecto
   return (
     <textarea
       className={cn(
@@ -13,6 +13,7 @@ const Textarea = React.forwardRef<
         className
       )}
       ref={ref}
+      autoFocus={autoFocus} // ← Esto hará que el textarea reciba foco automáticamente
       {...props}
     />
   )
