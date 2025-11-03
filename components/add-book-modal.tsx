@@ -822,6 +822,7 @@ import { QuotesSection, Quote } from "./QuotesSection"
                     </div>
                   </div>
 
+                  <Label className="label">Citas Favoritas</Label>
                   <QuotesSection
                     quotes={formData.quotes}
                     onQuotesChange={handleQuotesChange}

@@ -503,7 +503,6 @@
       case "main_characters":
       case "favorite_character":
         return (
-          <div className="absolute z-50 bg-white shadow-lg rounded-md border p-2 w-[300px]">
             <Input
               value={editValue || ""}
               onChange={(e) => setEditValue(e.target.value)}
@@ -519,7 +518,6 @@
               className="text-sm"
               ref={inputRef}
             />
-          </div>
         )
 
       default:

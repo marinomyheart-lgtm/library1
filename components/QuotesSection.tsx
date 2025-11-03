@@ -81,9 +81,7 @@ export function QuotesSection({ quotes, onQuotesChange, className = "" }: Quotes
   }
 
   return (
-    <div className={`space-y-3 ${className}`}>
-      <Label className="label">Citas Favoritas</Label>
-      
+    <div className={`space-y-3 ${className}`}>      
       <div className="border bordes rounded-lg p-3 space-y-3">
         {/* Input para nueva cita */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

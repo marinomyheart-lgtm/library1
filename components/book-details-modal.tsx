@@ -402,10 +402,7 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
 
     if (isEditing) {
       return (
-        <div className="bg-white/60 rounded-lg p-3">
-          <Label className="text-xs font-semibold text-v500 uppercase tracking-wide">
-            Personajes Principales
-          </Label>
+        <div className="bg-white/60 rounded-lg p-3" style={{ position: "relative", zIndex: 9999 }}>
           <div className="mt-1">
             <EditableCell
               book={book!}
@@ -435,7 +432,12 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
             ))}
           </ul>
         ) : (
-          <p className="text-sm mt-1 text-gray-400 italic">No hay información de personajes principales</p>
+          <div className="flex items-center justify-center h-full opacity-60 group-hover:opacity-100 transition-opacity">
+            <div className="text-center text-gray-400 group-hover:text-v500 transition-colors">
+              <Users className="w-6 h-6 mx-auto mb-1" />
+              <span className="text-xs">Agregar personajes principales</span>
+            </div>
+          </div>
         )}
       </div>
     )
@@ -444,11 +446,11 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
   const renderFavoriteCharacterField = () => {
     if (!book) return null
     const isEditing = editingField?.section === "characters" && editingField?.field === "favorite_character"
+    const hasFavoriteCharacter = !!book.favorite_character
 
     if (isEditing) {
       return (
-        <div className="bg-white/60 rounded-lg p-3">
-          <Label className="text-xs font-semibold text-purple-500 uppercase tracking-wide">Personaje Favorito</Label>
+        <div className="bg-white/60 rounded-lg p-3" style={{ position: "relative", zIndex: 9999 }}>
           <div className="mt-1">
             <EditableCell
               book={book!}
@@ -465,13 +467,21 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
 
     return (
       <div
-        className="bg-white/60 rounded-lg p-3 cursor-pointer hover:bg-white/80 transition-colors group relative"
+        className="cursor-pointer group relative min-h-[60px] rounded-lg border-2 border-dashed border-transparent group-hover:bordes transition-all"
         onClick={() => setEditingField({ section: "characters", field: "favorite_character" })}
       >
-        <Label className="text-xs font-semibold text-purple-500 uppercase tracking-wide">Personaje Favorito</Label>
-        <p className="text-sm mt-1 text-gray-700">
-          {book.favorite_character || "No hay personaje favorito especificado"}
-        </p>
+        {hasFavoriteCharacter ? (
+          <div className="bg-white/60 rounded-lg p-3">
+            <p className="text-sm mt-1 text-gray-700">{book.favorite_character}</p>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center h-full opacity-60 group-hover:opacity-100 transition-opacity">
+            <div className="text-center text-gray-400 group-hover:text-v500 transition-colors">
+              <Heart className="w-6 h-6 mx-auto mb-1" />
+              <span className="text-xs">Agregar personaje favorito</span>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -827,7 +837,7 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
                   {book.rating !== undefined && renderRatingAndFavoriteField()}
 
                   {/* One line summary */}
-                  {renderReviewField("review", "Agregar reseña")}
+                  {renderReviewField("review", "")}
                 </div>
               </CardContent>
             </Card>
@@ -984,7 +994,9 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
 
                 {/* Personajes */}
                 <TabsContent value="characters" className="h-full overflow-y-auto space-y-6">
-                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+                  <Card
+                    className={`border-0 ${editingField?.section === "characters" && editingField?.field === "main_characters" ? "bg-white/80" : "bg-white/80 backdrop-blur-sm"}`}
+                  >
                     <CardHeader>
                       <CardTitle className="text-purple-800 flex items-center gap-2">
                         <Users className="h-5 w-5" />
@@ -994,7 +1006,9 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
                     <CardContent>{renderMainCharactersField()}</CardContent>
                   </Card>
 
-                  <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+                  <Card
+                    className={`border-0 ${editingField?.section === "characters" && editingField?.field === "favorite_character" ? "bg-white/80" : "bg-white/80 backdrop-blur-sm"}`}
+                  >
                     <CardHeader>
                       <CardTitle className="text-purple-800 flex items-center gap-2">
                         <Heart className="h-5 w-5" />
@@ -1041,26 +1055,20 @@ export function BookDetailsModal({book,isOpen,onOpenChange,quotes,onBookUpdate,r
                           />
                         ) : (
                           /* LISTA DE CITAS EXISTENTES - SOLO SE MUESTRA CUANDO NO ESTÁS AGREGANDO */
-                          currentQuotes.length > 0 ? (
-                            currentQuotes.map((quote) => (
-                              <div
-                                key={quote.id}
-                                className="border-l-4 border-purple-300 pl-4 py-2 bg-purple-50/50 rounded-r-lg"
-                              >
-                                <MarkdownViewer content={`"${quote.text}"`} />
-                                {quote.page && <div className="text-sm text-purple-600 mt-1">Página {quote.page}</div>}
-                                {quote.category && (
-                                  <Badge variant="outline" className="mt-2 text-xs">
-                                    {quote.category}
-                                  </Badge>
-                                )}
-                              </div>
-                            ))
-                          ) : (
-                            <p className="text-gray-400 italic">
-                              No hay citas registradas para este libro
-                            </p>
-                          )
+                          currentQuotes.length > 0 && currentQuotes.map((quote) => (
+                            <div
+                              key={quote.id}
+                              className="border-l-4 border-purple-300 pl-4 py-2 bg-purple-50/50 rounded-r-lg"
+                            >
+                              <MarkdownViewer content={`"${quote.text}"`} />
+                              {quote.page && <div className="text-sm text-purple-600 mt-1">Página {quote.page}</div>}
+                              {quote.category && (
+                                <Badge variant="outline" className="mt-2 text-xs">
+                                  {quote.category}
+                                </Badge>
+                              )}
+                            </div>
+                          ))
                         )}
                       </div>
                     </CardContent>
