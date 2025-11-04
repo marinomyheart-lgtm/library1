@@ -9,14 +9,12 @@ import { useViewMode } from "@/components/view-mode-provider"
 import { BookCard } from "@/components/book-card"
 import { BookTable } from "@/components/book-table"
 import { ViewModeToggle } from "@/components/view-mode-toggle"
-import { Badge } from "@/components/ui/badge"
 import { AddBookModal } from "@/components/add-book-modal"
 import { supabase } from '@/lib/supabaseClient';
 import type { Book, Quote  } from "@/lib/types"  
 import { BookDetailsModal } from '@/components/book-details-modal'
 import { BookSearchButton } from '@/components/book-search-button'
 import { BookTextAnalyzerModal } from '@/components/text-analyzer-modal'
-import { useBulkDataParser } from '@/hooks/useBulkDataParser'
 
 export default function HomePage() {
   const { viewMode } = useViewMode()

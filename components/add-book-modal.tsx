@@ -15,7 +15,8 @@
   import { MultiSelect } from "@/components/MultiSelect"
   import { useBulkDataParser } from "@/hooks/useBulkDataParser"
   import { BulkInputSection } from "./BulkInputSection"
-import { QuotesSection, Quote } from "./QuotesSection"
+  import { QuotesSection } from "./QuotesSection"
+  import type { Quote } from "@/lib/types" 
 
   interface AddBookModalProps {
     refreshData?: () => void
@@ -295,7 +296,7 @@ import { QuotesSection, Quote } from "./QuotesSection"
           const quotesToInsert = formData.quotes.map((quote) => ({
             book_id: book.id,
             text: quote.text,
-            page: quote.page ? Number.parseInt(quote.page) : null,
+            page: quote.page || null,
             type: quote.type || null,
             category: quote.category || null,
             favorite: false,

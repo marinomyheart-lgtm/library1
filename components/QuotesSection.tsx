@@ -4,7 +4,6 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { MultiSelect } from "@/components/MultiSelect"
 import { MarkdownEditor } from "./MarkdownEditor"
 import { MarkdownViewer } from "./MarkdownViewer"
@@ -60,11 +59,13 @@ export function QuotesSection({ quotes, onQuotesChange, className = "" }: Quotes
   const addQuote = () => {
     if (quoteInput.text.trim()) {
       const newQuote: Quote = {
+        id: Date.now(),
         text: quoteInput.text.trim(),
         page: quoteInput.page ? Number(quoteInput.page) : undefined, // Convertir a número
         type: quoteInput.type.trim() || "General",
         category: quoteInput.category.length > 0 ? quoteInput.category.join(", ") : "",
-      }
+        favorite: false,
+      } 
       onQuotesChange([...quotes, newQuote])
       setQuoteInput({ text: "", page: "", type: "", category: [] })
     }

@@ -183,8 +183,6 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
     fetchOptions()
   }, [])
 
-  const getBookQuotes = (bookId: number) => quotesMap[bookId] || []
-
   const handleViewBook = (bookId: number) => {
     const book = books.find((b) => b.id === bookId)
     if (book) {
@@ -380,7 +378,6 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
       const percentage = ((value ?? 0) / 10) * 100
       return (
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-slate-700 text-xs min-w-[12px]">{value}</span>
           <div className="relative flex-1 bg-slate-200 rounded-full h-1.5 min-w-[40px] overflow-hidden">
             <div
               className="absolute top-0 left-0 h-full rounded-full transition-all duration-300 bg-gradient-to-r from-green-300 to-blue-300"
@@ -391,6 +388,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
               style={{ width: `${100 - percentage}%`, mixBlendMode: "destination-out" as any }}
             />
           </div>
+          <span className="font-semibold text-slate-700 text-xs min-w-[12px]">{value}</span>
         </div>
       )
 
