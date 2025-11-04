@@ -4,24 +4,23 @@ import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight, X } from "lucide-react"
 
 interface CalendarProps {
-  value?: Date | null
-  onChange?: (date: Date) => void
+  value?: string | null // ← Cambiar a string
+  onChange?: (date: string) => void // ← Cambiar a string
   onClear?: () => void
 }
 
 export function Calendar({ value, onChange, onClear }: CalendarProps) {
-  const [currentDate, setCurrentDate] = useState(new Date()) // Fecha actual por defecto
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [currentDate, setCurrentDate] = useState(new Date())
+  const [selectedDate, setSelectedDate] = useState<string | null>(value || null) // ← string
 
-  // Actualizar si cambian las props externas
+  // Ya no necesitamos useEffect complicado
   useEffect(() => {
     if (value) {
-      setCurrentDate(value)
       setSelectedDate(value)
+      // Solo actualizar currentDate si es necesario para navegación
+      const [year, month] = value.split('-').map(Number)
+      setCurrentDate(new Date(year, month - 1, 1))
     } else {
-      // Si no hay valor, usar fecha actual pero no seleccionar ningún día
-      const today = new Date()
-      setCurrentDate(today)
       setSelectedDate(null)
     }
   }, [value])
@@ -64,16 +63,22 @@ export function Calendar({ value, onChange, onClear }: CalendarProps) {
     return day === today.getDate() && currentDate.getMonth() === today.getMonth() && currentDate.getFullYear() === today.getFullYear()
   }
 
-  const isSelected = (day: number) =>
-    selectedDate && 
-    day === selectedDate.getDate() && 
-    currentDate.getMonth() === selectedDate.getMonth() && 
-    currentDate.getFullYear() === selectedDate.getFullYear()
+  const isSelected = (day: number) => {
+    if (!selectedDate) return false
+    const [year, month, selectedDay] = selectedDate.split('-').map(Number)
+    return day === selectedDay && 
+           currentDate.getMonth() + 1 === month && 
+           currentDate.getFullYear() === year
+  }
 
   const handleSelectDate = (day: number) => {
-    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
-    setSelectedDate(date)
-    onChange?.(date)
+    const year = currentDate.getFullYear()
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0')
+    const dayStr = String(day).padStart(2, '0')
+    const dateString = `${year}-${month}-${dayStr}`
+    
+    setSelectedDate(dateString)
+    onChange?.(dateString) // ← Envía string directamente
   }
 
   const handleClearDate = () => {
@@ -81,11 +86,10 @@ export function Calendar({ value, onChange, onClear }: CalendarProps) {
     onClear?.()
   }
 
-  const formatDate = (date: Date) => {
-    const day = date.getDate().toString().padStart(2,"0")
-    const month = monthNames[date.getMonth()].slice(0,3)
-    const year = date.getFullYear()
-    return `${month} ${day}, ${year}`
+  const formatDisplayDate = (dateStr: string) => {
+    const [year, month, day] = dateStr.split('-').map(Number)
+    const monthName = monthNames[month - 1].slice(0,3)
+    return `${monthName} ${day}, ${year}`
   }
 
   return (
@@ -94,7 +98,7 @@ export function Calendar({ value, onChange, onClear }: CalendarProps) {
       <div className="mb-2 pb-1 border-b border-border">
         <div className="flex items-center justify-between">
           <button className="text-xs font-semibold text-blue-600 focus:outline-none focus:text-blue-800 focus:bg-blue-50 focus:rounded-sm focus:px-1 transition-all duration-200">
-            {selectedDate ? formatDate(selectedDate) : "Selecciona una fecha"}
+            {selectedDate ? formatDisplayDate(selectedDate) : "Selecciona una fecha"}
           </button>
           {selectedDate && (
             <button

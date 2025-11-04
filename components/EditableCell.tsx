@@ -9,9 +9,7 @@ import type { Book } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon, X } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { format } from "date-fns"
 
 interface EditableCellProps {
   book: Book
@@ -209,7 +207,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
       if (columnId === "pages" || columnId === "year") dbValue = parseInt(valueToSave)
       if (columnId === "favorite") dbValue = Boolean(valueToSave)
       if (columnId === "dateStarted" || columnId === "dateRead") {
-        dbValue = valueToSave ? new Date(valueToSave).toISOString() : null
+        dbValue = valueToSave 
       }
 
       if (columnId !== "genre") {
@@ -301,10 +299,10 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         return (
           <div className="p-0 -m-px">
             <Calendar
-              value={editValue ? new Date(editValue) : undefined}
-              onChange={(date) => {
-                setEditValue(date?.toISOString() || null)
-                handleSave(date?.toISOString() || null)
+              value={editValue} // ← String directamente
+              onChange={(dateString) => { // ← Recibe string
+                setEditValue(dateString)
+                handleSave(dateString)
               }}
               onClear={() => {
                 setEditValue(null)

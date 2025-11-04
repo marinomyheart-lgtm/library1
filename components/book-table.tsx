@@ -433,10 +433,16 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
     case "dateStarted":
     case "dateRead":
       if (!value) return null;
-      
+      let displayDate;
+      if (typeof value === 'string' && value.includes('-')) {
+        // Para formato YYYY-MM-DD, agregar hora local
+        displayDate = new Date(value + 'T12:00:00'); // Mediodía local
+      } else {
+        displayDate = new Date(value);
+      }
       return (
         <span className="text-slate-600 font-medium text-xs">
-          {new Date(value).toLocaleDateString("es-ES")}
+          {displayDate.toLocaleDateString("es-ES")}
         </span>
       )
 
