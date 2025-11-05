@@ -20,18 +20,18 @@ interface QuotesSectionProps {
 export function QuotesSection({ quotes, onQuotesChange, className = "" }: QuotesSectionProps) {
   const [quoteInput, setQuoteInput] = useState({
     text: "",
-    page: "" as string | number, // Permitir ambos tipos temporalmente
+    page: "" as string | number, // Allow both types temporarily
     type: "",
     category: [] as string[],
   })
   const [quoteTypesOptions, setQuoteTypesOptions] = useState<{ value: string; label: string }[]>([])
   const [quoteCategoriesOptions, setQuoteCategoriesOptions] = useState<{ value: string; label: string }[]>([])
 
-  // Cargar opciones de tipos y categorías
+  // Load types and categories options
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        // Tipos de citas
+        // Quote types
         const { data: quoteTypes } = await supabase
           .from("quotes")
           .select("type")
@@ -40,7 +40,7 @@ export function QuotesSection({ quotes, onQuotesChange, className = "" }: Quotes
         const uniqueQuoteTypes = [...new Set(quoteTypes?.map((qt) => qt.type))]
         setQuoteTypesOptions(uniqueQuoteTypes?.map((qt) => ({ value: qt, label: qt })) || [])
 
-        // Categorías de citas
+        // Quote categories
         const { data: quoteCategories } = await supabase
           .from("quotes")
           .select("category")
@@ -61,7 +61,7 @@ export function QuotesSection({ quotes, onQuotesChange, className = "" }: Quotes
       const newQuote: Quote = {
         id: Date.now(),
         text: quoteInput.text.trim(),
-        page: quoteInput.page ? Number(quoteInput.page) : undefined, // Convertir a número
+        page: quoteInput.page ? Number(quoteInput.page) : undefined, // Convert to number
         type: quoteInput.type.trim() || "General",
         category: quoteInput.category.length > 0 ? quoteInput.category.join(", ") : "",
         favorite: false,
@@ -84,13 +84,13 @@ export function QuotesSection({ quotes, onQuotesChange, className = "" }: Quotes
   return (
     <div className={`space-y-3 ${className}`}>      
       <div className="border bordes rounded-lg p-3 space-y-3">
-        {/* Input para nueva cita */}
+        {/* Input for new quote */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="md:col-span-2">
             <MarkdownEditor
               value={quoteInput.text}
               onChange={(value) => setQuoteInput((prev) => ({ ...prev, text: value }))}
-              placeholder="Escribe la cita (usa Markdown para formato)"
+              placeholder="Write the quote (use Markdown for formatting)"
             />
           </div>
           <div className="space-y-2">
@@ -98,14 +98,14 @@ export function QuotesSection({ quotes, onQuotesChange, className = "" }: Quotes
               type="number"
               value={quoteInput.page}
               onChange={(e) => setQuoteInput((prev) => ({ ...prev, page: e.target.value }))}
-              placeholder="Página"
+              placeholder="Page"
               className="input"
             />
             <MultiSelect
               options={quoteTypesOptions}
               selected={quoteInput.type ? [quoteInput.type] : []}
               onChange={(selected) => setQuoteInput((prev) => ({ ...prev, type: selected[0] || "" }))}
-              placeholder="Tipo"
+              placeholder="Type"
               singleSelect
               creatable
             />
@@ -113,7 +113,7 @@ export function QuotesSection({ quotes, onQuotesChange, className = "" }: Quotes
               options={quoteCategoriesOptions}
               selected={quoteInput.category}
               onChange={(selected) => setQuoteInput((prev) => ({ ...prev, category: selected }))}
-              placeholder="Categorías"
+              placeholder="Categories"
               creatable
               className="text-sm"
             />
@@ -127,10 +127,10 @@ export function QuotesSection({ quotes, onQuotesChange, className = "" }: Quotes
           className="button2"
         >
           <Plus className="w-4 h-4 mr-1" />
-          Agregar Cita
+          Add Quote
         </Button>
 
-        {/* Lista de citas existentes */}
+        {/* List of existing quotes */}
         {quotes.length > 0 && (
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {quotes.map((quote, index) => (
@@ -151,7 +151,7 @@ export function QuotesSection({ quotes, onQuotesChange, className = "" }: Quotes
   )
 }
 
-// Componente interno para cada item de cita
+// Internal component for each quote item
 interface QuoteItemProps {
   quote: Quote
   index: number
@@ -181,7 +181,7 @@ function QuoteItem({ quote, index, onUpdate, onRemove, typesOptions, categoriesO
         <MarkdownEditor
           value={editQuote.text}
           onChange={(value) => setEditQuote(prev => ({ ...prev, text: value }))}
-          placeholder="Escribe la cita"
+          placeholder="Write the quote"
         />
         <div className="grid grid-cols-3 gap-2">
           <Input
@@ -191,14 +191,14 @@ function QuoteItem({ quote, index, onUpdate, onRemove, typesOptions, categoriesO
               ...prev, 
               page: e.target.value ? Number(e.target.value) : undefined 
             }))}
-            placeholder="Página"
+            placeholder="Page"
             className="input"
           />
           <MultiSelect
             options={typesOptions}
             selected={editQuote.type ? [editQuote.type] : []}
             onChange={(selected) => setEditQuote(prev => ({ ...prev, type: selected[0] || "" }))}
-            placeholder="Tipo"
+            placeholder="Type"
             singleSelect
             creatable
           />
@@ -206,16 +206,16 @@ function QuoteItem({ quote, index, onUpdate, onRemove, typesOptions, categoriesO
             options={categoriesOptions}
             selected={editQuote.category ? editQuote.category.split(", ") : []}
             onChange={(selected) => setEditQuote(prev => ({ ...prev, category: selected.join(", ") }))}
-            placeholder="Categorías"
+            placeholder="Categories"
             creatable
           />
         </div>
         <div className="flex gap-2 justify-end">
           <Button size="sm" onClick={handleSave} className="button2">
-            Guardar
+            Save
           </Button>
           <Button size="sm" variant="outline" className="button-tran2" onClick={handleCancel}>
-            Cancelar
+            Cancel
           </Button>
         </div>
       </div>
@@ -228,7 +228,7 @@ function QuoteItem({ quote, index, onUpdate, onRemove, typesOptions, categoriesO
         <div className="flex-1">
           <MarkdownViewer content={quote.text} />
           <div className="flex gap-2 mt-1 text-xs text-gray-500">
-            {quote.page && <span>Página {quote.page}</span>}
+            {quote.page && <span>Page {quote.page}</span>}
             {quote.type && <span>• {quote.type}</span>}
             {quote.category && <span>• {quote.category}</span>}
           </div>

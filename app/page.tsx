@@ -204,7 +204,7 @@ export default function HomePage() {
       <div className="min-h-screen flex items-center justify-center bg-v50">
         <div className="text-center">
           <div className="loading h-12 w-12 border-t-2 border-v500 mx-auto mb-4"></div>
-          <p className="text">Cargando tu biblioteca...</p>
+          <p className="text">Loading your library...</p>
         </div>
       </div>
     )
@@ -214,10 +214,10 @@ export default function HomePage() {
     <div className="min-h-screen bg-v50">
       <div className="container mx-auto px-4 py-8">
         {/* Header with Add Book Button */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
           <div>
-            <h1 className="title">Mi Biblioteca</h1>
-            <p className="text-v600">Gestiona y explora tu colección personal de libros</p>
+            <h1 className="title">My Library</h1>
+            <p className="text-v600">Manage and explore your personal book collection</p>
           </div>
           <div className="flex gap-3">
             <BookSearchButton onBookSelect={handleSearchBookSelect} />
@@ -235,52 +235,52 @@ export default function HomePage() {
               className="button-tran"
             >
               <BookOpen className="h-4 w-4 mr-2" />
-              Analizar Texto
+              Analyze Text
             </Button>
             <Button
               onClick={() => setShowAddBook(true)}
               className="button1"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Agregar Libro
+              Add Book
             </Button>
           </div>
         </div>
 
         {/* Dashboard Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="card">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4">
+            <Card className="card">
             <CardHeader className="card-header">
-              <CardTitle className="card-title">Libros Leídos</CardTitle>
+              <CardTitle className="card-title">Books Read</CardTitle>
               <BookIcon className="icon" />
             </CardHeader>
             <CardContent className="px-3 pb-3">
               <div className="card-div">{statsData.totalBooks}</div>
-              <p className="card-p">+{statsData.booksThisYear} este año</p>
+              <p className="card-p">+{statsData.booksThisYear} this year</p>
             </CardContent>
           </Card>
 
           <Card className="card">
             <CardHeader className="card-header">
-              <CardTitle className="card-title">Páginas Leídas</CardTitle>
+              <CardTitle className="card-title">Pages Read</CardTitle>
               <BookOpen className="icon" />
             </CardHeader>
             <CardContent className="px-3 pb-3">
               <div className="card-div">{statsData.totalPages.toLocaleString()}</div>
               <p className="card-p">
-                Promedio: {Math.round(statsData.totalPages / statsData.totalBooks)} por libro
+                Average: {Math.round(statsData.totalPages / statsData.totalBooks)} per book
               </p>
             </CardContent>
           </Card>
 
           <Card className="card">
             <CardHeader className="card-header">
-              <CardTitle className="card-title">Calificación Promedio</CardTitle>
+              <CardTitle className="card-title">Average Rating</CardTitle>
               <Star className="icon" />
             </CardHeader>
             <CardContent className="px-3 pb-3">
               <div className="card-div">{statsData.averageRating}</div>
-              <p className="card-p">de 10 puntos</p>
+              <p className="card-p">out of 10 points</p>
             </CardContent>
           </Card>
         </div>
@@ -293,7 +293,7 @@ export default function HomePage() {
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-v500 z-10 pointer-events-none" />
               <Input
-                placeholder="Buscar por título"
+                placeholder="Search by title"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-12 h-9 bg-white/30 text-gray-700 backdrop-blur-md border bordes rounded-2xl placeholder:text-gray-500"/>
@@ -309,64 +309,64 @@ export default function HomePage() {
 
             {/* Filters */}
             <div className="flex flex-wrap gap-3 items-center">
-              {/* Favoritos */}
+              {/* Favorites */}
               <Select value={selectedFavorites} onValueChange={setSelectedFavorites}>
                 <SelectTrigger className="setrigger"><SelectValue/></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all" className="select-item">
                     <Library className="icons" />
-                    Todos los libros
+                    All books
                   </SelectItem>
                   <SelectItem value="favorites" className="select-item">
                     <Star className="icons fill-purple-500" />
-                    Solo favoritos
+                    Only favorites
                   </SelectItem>
                   <SelectItem value="non-favorites" className="select-item">
                     <Library className="icons" />
-                    No favoritos
+                    Not favorites
                   </SelectItem>
                 </SelectContent>
               </Select>
 
-              {/* Ordenar por */}
+              {/* Sort by */}
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="setrigger"><SelectValue/></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="default" className="select-item">
                     <SortDesc className="icons" />
-                    Orden (Mayor a menor)
+                    Order (High to low)
                   </SelectItem>
-                  <SelectItem value="orden-asc" className="select-item">
+                  <SelectItem value="order-asc" className="select-item">
                     <SortAsc className="icons" />
-                    Orden (Menor a mayor)
+                    Order (Low to high)
                   </SelectItem>
                   <SelectItem value="rating-desc" className="select-item">
                     <SortDesc className="icons" />
-                    Calificación (Mayor)
+                    Rating (Highest)
                   </SelectItem>
                   <SelectItem value="rating-asc" className="select-item">
                     <SortAsc className="icons" />
-                    Calificación (Menor)
+                    Rating (Lowest)
                   </SelectItem>
                   <SelectItem value="title" className="select-item">
                     <BookOpen className="icons" />
-                    Título (A-Z)
+                    Title (A-Z)
                   </SelectItem>
                   <SelectItem value="author" className="select-item">
                     <User className="icons" />
-                    Autor (A-Z)
+                    Author (A-Z)
                   </SelectItem>
                   <SelectItem value="pages-desc" className="select-item">
                     <SortDesc className="icons" />
-                    Páginas (Mayor)
+                    Pages (Most)
                   </SelectItem>
-                  <SelectItem value="pages-asc" className="select-item">z
+                  <SelectItem value="pages-asc" className="select-item">
                     <SortAsc className="icons" />
-                    Páginas (Menor)
+                    Pages (Least)
                   </SelectItem>
                 </SelectContent>
               </Select>
-               {/* Botón para borrar filtros - Solo aparece cuando hay filtros activos */}
+               {/* Clear filters button - Only appears when there are active filters */}
               {(selectedFavorites !== "all" || sortBy !== "default" || searchTerm) && (
                 <Button
                   onClick={() => {
@@ -394,7 +394,7 @@ export default function HomePage() {
       <div className="px-4 lg:px-10">
         {/* Books Display */}
         {viewMode === "cards" ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-6">
             {filteredBooks.map((book) => (
               <BookCard key={book.id} book={book} />
             ))}
@@ -409,7 +409,7 @@ export default function HomePage() {
           />
         )}
 
-        {/* Modal de detalles del libro */}
+        {/* Book details modal */}
         <BookDetailsModal 
           book={selectedBook}
           isOpen={!!selectedBook}
@@ -419,7 +419,7 @@ export default function HomePage() {
           refreshData={fetchBooks}
         />
 
-        {/* Modal del analizador de texto */}
+        {/* Text analyzer modal */}
         <BookTextAnalyzerModal
           isOpen={showAnalyzer}
           onClose={() => setShowAnalyzer(false)}
@@ -443,9 +443,9 @@ export default function HomePage() {
           <Card className="text-center py-12 bg-white/60 backdrop-blur-sm border-0">
             <CardContent>
               <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No se encontraron libros</h3>
+              <h3 className="text-lg font-semibold mb-2">No books found</h3>
               <p className="text-muted-foreground">
-                Intenta ajustar tus filtros de búsqueda o agrega un nuevo libro a tu biblioteca.
+                Try adjusting your search filters or add a new book to your library.
               </p>
             </CardContent>
           </Card>

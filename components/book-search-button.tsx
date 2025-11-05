@@ -46,7 +46,7 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Función para búsqueda en tiempo real
+  // Function for real-time search
   const searchBooks = async (query: string) => {
     if (!query.trim()) {
       setSearchResults({ books: [], authors: [] })
@@ -76,14 +76,14 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
     }
   }
 
-  // Función para manejar la selección de resultados
+  // Function to handle result selection
   const handleResultSelect = (result: SearchResult) => {
     if (result.searchType === 'book') {
-      // En lugar de llamar directamente a onBookSelect, abrimos el modal de detalles
+      // Instead of calling onBookSelect directly, open the details modal
       setSelectedBook(result)
       setShowBookDetails(true)
       
-      // Si existe el callback onBookSelect, también lo llamamos
+      // If the onBookSelect callback exists, also call it
       if (onBookSelect) {
         onBookSelect(result)
       }
@@ -95,11 +95,11 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
     setShowSearch(false)
   }
 
-  // Función para manejar la tecla Enter
+  // Function to handle Enter key
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && searchTerm.trim()) {
       e.preventDefault()
-      // Redirigir a la página de resultados
+      // Redirect to results page
       router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`)
       setShowResults(false)
       setShowSearch(false)
@@ -107,7 +107,7 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
     }
   }
 
-  // Debounce para la búsqueda
+  // Debounce for search
   useEffect(() => {
     const timer = setTimeout(() => {
       if (showSearch && searchTerm.trim()) {
@@ -121,7 +121,7 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
     return () => clearTimeout(timer)
   }, [searchTerm, showSearch])
 
-  // Cerrar resultados cuando se hace click fuera
+  // Close results when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -135,14 +135,14 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
     }
   }, [])
 
-  // Focus input cuando se abre
+  // Focus input when opened
   useEffect(() => {
     if (showSearch && inputRef.current) {
       inputRef.current.focus()
     }
   }, [showSearch])
 
-  // Mostrar resultados cuando el input recibe foco y hay término de búsqueda
+  // Show results when input receives focus and there's a search term
   const handleInputFocus = () => {
     if (searchTerm.trim()) {
       setShowResults(true)
@@ -160,14 +160,14 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-v700 z-10 pointer-events-none" />
               <Input
                 ref={inputRef}
-                placeholder="Buscar libros o autores..."
+                placeholder="Search books or authors..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleKeyDown}
                 onFocus={handleInputFocus}
                 className="pl-10 pr-10 h-9 bg-white/80 text-gray-700 border border-v300 rounded-lg placeholder:text-gray-500 focus-visible:ring-v200"
               />
-              {/* Botón para cerrar */}
+              {/* Close button */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -183,21 +183,21 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
               </Button>
             </div>
 
-            {/* Resultados de búsqueda */}
+            {/* Search results */}
             {showResults && (
               <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg z-50 mt-1 max-h-80 overflow-y-auto">
                 {searchLoading ? (
                   <div className="flex justify-center items-center p-4">
                     <div className="loading h-6 w-6 border-t-2 border-v500"></div>
-                    <span className="ml-2 text-sm text">Buscando...</span>
+                    <span className="ml-2 text-sm text">Searching...</span>
                   </div>
                 ) : hasResults ? (
                   <div className="p-2">
-                    {/* Libros */}
+                    {/* Books */}
                     {searchResults.books.length > 0 && (
                       <>
                         <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-2">
-                          Libros
+                          Books
                         </h3>
                         <div className="space-y-1">
                           {searchResults.books.map((book) => (
@@ -227,7 +227,7 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
                                   {book.volumeInfo?.title}
                                 </h4>
                                 <p className="text-xs text-gray-600 truncate">
-                                  {book.volumeInfo?.authors?.join(', ') || 'Autor desconocido'}
+                                  {book.volumeInfo?.authors?.join(', ') || 'Unknown author'}
                                 </p>
                                 {book.volumeInfo?.publishedDate && (
                                   <p className="text-xs text-gray-500">
@@ -241,11 +241,11 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
                       </>
                     )}
 
-                    {/* Autores */}
+                    {/* Authors */}
                     {searchResults.authors.length > 0 && (
                       <>
                         <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 px-2">
-                          Autores
+                          Authors
                         </h3>
                         <div className="space-y-1 mb-4">
                           {searchResults.authors.map((author) => (
@@ -270,7 +270,7 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
                                   {author.name}
                                 </h4>
                                 <p className="text-xs text-gray-600">
-                                  {author.booksCount} libro{author.booksCount !== 1 ? 's' : ''}
+                                  {author.booksCount} book{author.booksCount !== 1 ? 's' : ''}
                                 </p>
                               </div>
                             </div>
@@ -279,16 +279,16 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
                       </>
                     )}
 
-                    {/* Footer con instrucción Enter */}
+                    {/* Footer with Enter instruction */}
                     <div className="border-t border-gray-100 mt-2 pt-2 px-2">
                       <p className="text-xs text-gray-500 text-center">
-                        Presiona <kbd className="px-1 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs">Enter</kbd> para ver todos los resultados
+                        Press <kbd className="px-1 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs">Enter</kbd> to see all results
                       </p>
                     </div>
                   </div>
                 ) : searchTerm.trim() ? (
                   <div className="p-4 text-center text-gray-500">
-                    No se encontraron resultados. Presiona Enter para buscar.
+                    No results found. Press Enter to search.
                   </div>
                 ) : null 
                 }
@@ -306,7 +306,7 @@ export function BookSearchButton({ onBookSelect, onAuthorSelect, refreshData }: 
         )}
       </div>
 
-      {/* Modal de detalles del libro */}
+      {/* Book details modal */}
       <BookSearchDetails
         book={selectedBook}
         isOpen={showBookDetails}

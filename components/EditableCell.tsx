@@ -36,31 +36,31 @@ export const EditableCell: React.FC<EditableCellProps> = ({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const [autoOpenMultiSelect, setAutoOpenMultiSelect] = useState(false)
 
-  // Configuración unificada para todos los tipos de campos
+  // Unified configuration for all field types
   const fieldConfig = {
-    // Campos que se abren automáticamente en popover
+    // Fields that open automatically in popover
     autoOpenPopover: ["dateStarted", "dateRead", "genre", "type", "publisher", "language", "era", "format", "audience", "readingDensity", "author", "universe", "favorite"],
     
-    // Campos que son MultiSelect
+    // Fields that are MultiSelect
     multiSelectFields: ["genre", "type", "publisher", "language", "era", "format", "audience", "readingDensity", "author", "universe"],
     
-    // Campos que son de selección única
+    // Fields that are single selection
     singleSelectFields: ["type", "publisher", "language", "era", "format", "audience", "readingDensity", "author", "universe", "favorite"],
     
-    // Campos que requieren IDs
+    // Fields that require IDs
     idBasedFields: ["author", "universe", "genre"],
     
-    // Campos creativos
+    // Creative fields
     creatableFields: ["type", "publisher", "language", "era", "format", "audience", "author", "universe", "genre"]
   }
 
   useEffect(() => {
-    // Abrir automáticamente los popovers para los campos configurados
+    // Automatically open popovers for configured fields
     if (fieldConfig.autoOpenPopover.includes(columnId)) {
       setIsPopoverOpen(true)
     }
 
-    // Para campos MultiSelect, activar el auto-open después de un pequeño delay
+    // For MultiSelect fields, activate auto-open after a small delay
     if (fieldConfig.multiSelectFields.includes(columnId)) {
       const timer = setTimeout(() => {
         setAutoOpenMultiSelect(true)
@@ -68,7 +68,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
       return () => clearTimeout(timer)
     }
 
-    // Para campos de input/textarea normales, enfocar
+    // For normal input/textarea fields, focus
     if (inputRef.current && !fieldConfig.autoOpenPopover.includes(columnId)) {
       inputRef.current.focus()
     }
@@ -81,11 +81,11 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     const valueToSave = newValue !== undefined ? newValue : editValue
     
     try {
-      // Validación específica para rating
+      // Specific validation for rating
       if (columnId === "rating") {
         const ratingValue = parseFloat(valueToSave);
         if (ratingValue < 1 || ratingValue > 10) {
-          toast.error("La calificación debe estar entre 1 y 10");
+          toast.error("Rating must be between 1 and 10");
           onCancel();
           return;
         }
@@ -122,7 +122,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
 
       let dbValue = valueToSave
 
-      // Convertir nombres a IDs para campos relacionales
+      // Convert names to IDs for relational fields
       if (fieldConfig.idBasedFields.includes(columnId) && columnId !== "genre") {
         if (valueToSave) {
           if (isNewItem && refreshOptions) {
@@ -150,7 +150,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
                   dbValue = data.id
                 } else {
                   dbValue = null
-                  toast.error(`No se pudo encontrar el ${columnId} "${valueToSave}"`)
+                  toast.error(`Could not find ${columnId} "${valueToSave}"`)
                 }
               }
             }
@@ -160,7 +160,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         }
       }
 
-      // Manejo especial para géneros
+      // Special handling for genres
       if (columnId === "genre") {
         if (Array.isArray(valueToSave)) {
           const validGenreIds = valueToSave
@@ -173,7 +173,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
             .eq("book_id", book.id)
 
           if (deleteError) {
-            console.error("Error eliminando relaciones de género:", deleteError)
+            console.error("Error deleting genre relationships:", deleteError)
             throw deleteError
           }
 
@@ -188,21 +188,21 @@ export const EditableCell: React.FC<EditableCellProps> = ({
               .insert(genreInserts)
 
             if (insertError) {
-              console.error("Error insertando relaciones de género:", insertError)
+              console.error("Error inserting genre relationships:", insertError)
             }
           }
 
-          toast.success("Géneros actualizados correctamente")
+          toast.success("Genres updated successfully")
           onSave(validGenreIds)
           return
         } else {
-          toast.error("Formato de géneros inválido")
+          toast.error("Invalid genre format")
           onCancel()
           return
         }
       }
 
-      // Conversiones de tipo
+      // Type conversions
       if (columnId === "rating") dbValue = parseFloat(valueToSave)
       if (columnId === "pages" || columnId === "year") dbValue = parseInt(valueToSave)
       if (columnId === "favorite") dbValue = Boolean(valueToSave)
@@ -219,12 +219,12 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         if (error) throw error
       }
 
-      toast.success(`Campo ${columnId} actualizado`)
+      toast.success(`Field ${columnId} updated`)
       onSave(dbValue)
       setIsPopoverOpen(false)
     } catch (error) {
       console.error("Error updating field:", error)
-      toast.error(`No se pudo actualizar el campo ${columnId}`)
+      toast.error(`Could not update field ${columnId}`)
       onCancel()
     }
   }
@@ -249,19 +249,19 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     }
   }
 
-  // Función para manejar cambios en MultiSelect
+  // Function to handle MultiSelect changes
   const handleMultiSelectChange = (selected: string[], newItem?: { value: string; label: string; id?: number }) => {
     const newValue = selected[0] || null
     setEditValue(newValue)
     handleSave(newValue, !!newItem)
   }
 
-  // Función específica para géneros
+  // Specific function for genres
   const handleGenreChange = (selected: string[], newItem?: { value: string; label: string; id?: number }) => {
     setEditValue(selected)
   }
 
-  // Función específica para autor/universo
+  // Specific function for author/universe
   const handleAuthorUniverseChange = async (selected: string[], newItem?: { value: string; label: string; id?: number }) => {
     const newValue = selected[0] || null
     setEditValue(newValue)
@@ -272,7 +272,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     }
   }
 
-  // Preparar los valores seleccionados para el MultiSelect de géneros
+  // Prepare selected values for genre MultiSelect
   const getSelectedGenreValues = () => {
     if (columnId !== "genre") return editValue ? [editValue] : []
     
@@ -282,7 +282,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     return editValue ? [editValue.toString()] : []
   }
 
-  // Preparar las opciones para el MultiSelect de géneros
+  // Prepare options for genre MultiSelect
   const getGenreOptions = () => {
     return options.map(option => ({
       value: option.id?.toString() || option.value,
@@ -291,7 +291,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     }))
   }
 
-  // COMPONENTE UNIFICADO PARA POPOVERS
+  // UNIFIED COMPONENT FOR POPOVERS
   const renderPopoverContent = () => {
     switch (columnId) {
       case "dateStarted":
@@ -299,8 +299,8 @@ export const EditableCell: React.FC<EditableCellProps> = ({
         return (
           <div className="p-0 -m-px">
             <Calendar
-              value={editValue} // ← String directamente
-              onChange={(dateString) => { // ← Recibe string
+              value={editValue} // ← String directly
+              onChange={(dateString) => { // ← Receives string
                 setEditValue(dateString)
                 handleSave(dateString)
               }}
@@ -321,7 +321,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
               onChange={handleGenreChange}
               singleSelect={false}
               className="text-sm"
-              placeholder="Selecciona géneros"
+              placeholder="Select genres"
               tableName="genres"
               returnId={true}
               refreshOptions={refreshOptions}
@@ -336,14 +336,14 @@ export const EditableCell: React.FC<EditableCellProps> = ({
                 className="h-6 px-2 border-violet-300 text-violet-400 hover:bg-violet-100 text-xs"
                 onClick={onCancel}
               >
-                Cancelar
+                Cancel
               </Button>
               <Button
                 size="sm"
                 className="h-6 px-2 bg-violet-200 text-violet-700 hover:bg-violet-300 text-xs"
                 onClick={() => handleSave(editValue)}
               >
-                Guardar
+                Save
               </Button>
             </div>
           </div>
@@ -364,7 +364,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
               onChange={handleMultiSelectChange}
               singleSelect={true}
               className="text-sm"
-              placeholder={`Selecciona ${columnId}`}
+              placeholder={`Select ${columnId}`}
               creatable={fieldConfig.creatableFields.includes(columnId)}
               columnId={columnId}
               autoOpen={autoOpenMultiSelect}
@@ -382,7 +382,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
               onChange={handleAuthorUniverseChange}
               singleSelect={true}
               className="text-sm"
-              placeholder={`Selecciona ${columnId === 'universe' ? 'un universo' : columnId}`}
+              placeholder={`Select ${columnId === 'universe' ? 'a universe' : columnId}`}
               tableName={getTableName(columnId)}
               returnId={true}
               creatable={true}
@@ -405,7 +405,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
               className="w-full text-sm px-2 py-1 rounded-md bg-violet-50 border border-violet-200 text-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-300 hover:bg-violet-100 transition-colors"
               autoFocus
             >
-              <option value="true">Sí</option>
+              <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
           </div>
@@ -416,7 +416,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     }
   }
 
-  // COMPONENTE UNIFICADO PARA POPOVER
+  // UNIFIED COMPONENT FOR POPOVER
   const renderAutoOpenPopover = () => (
     <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
       <PopoverTrigger asChild>
@@ -438,7 +438,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     </Popover>
   )
 
-  // Renderizado de campos normales (no popover)
+  // Rendering of normal fields (not popover)
   const renderNormalField = () => {
     switch (columnId) {
       case "title":
@@ -487,7 +487,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
                 }
               }}
               className="w-full text-xs px-2 py-1 bg-white min-h-[400px] resize-none border-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-              placeholder="Escribe el resumen del libro..."
+              placeholder="Write the book summary..."
               ref={textareaRef}
             />
             <div className="p-1 border-t flex justify-end gap-1 text-xs mt-2">
@@ -497,14 +497,14 @@ export const EditableCell: React.FC<EditableCellProps> = ({
                 className="h-6 px-2 border-violet-300 text-violet-400 hover:bg-violet-100 text-xs"
                 onClick={onCancel}
               >
-                Cancelar
+                Cancel
               </Button>
               <Button
                 size="sm"
                 className="h-6 px-2 bg-violet-200 text-violet-700 hover:bg-violet-300 text-xs"
                 onClick={() => handleSave()}
               >
-                Guardar
+                Save
               </Button>
             </div>
           </div>
@@ -526,7 +526,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
                 }
               }}
               className="w-full text-xs px-2 py-1 bg-white min-h-[100px] resize-none border-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-              placeholder="Escribe tu reseña..."
+              placeholder="Write your review..."
               ref={textareaRef}
             />
             <div className="p-1 border-t flex justify-end gap-1 text-xs mt-2">
@@ -536,14 +536,14 @@ export const EditableCell: React.FC<EditableCellProps> = ({
                 className="h-6 px-2 border-violet-300 text-violet-400 hover:bg-violet-100 text-xs"
                 onClick={onCancel}
               >
-                Cancelar
+                Cancel
               </Button>
               <Button
                 size="sm"
                 className="h-6 px-2 bg-violet-200 text-violet-700 hover:bg-violet-300 text-xs"
                 onClick={() => handleSave()}
               >
-                Guardar
+                Save
               </Button>
             </div>
           </div>
@@ -574,7 +574,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
     }
   }
 
-  // RENDER PRINCIPAL
+  // MAIN RENDER
   if (fieldConfig.autoOpenPopover.includes(columnId)) {
     return (
       <div className="absolute z-50">

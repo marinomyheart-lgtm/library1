@@ -32,7 +32,7 @@ export function BookCard({ book }: BookCardProps) {
           alt={book.title}
           width={150}
           height={220}
-          className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-lg"
+          className="w-full h-auto aspect-[2/3] object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-lg"
         />
         {book.favorite && (
           <div className="absolute top-2 right-2">

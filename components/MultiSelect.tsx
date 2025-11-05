@@ -24,7 +24,7 @@ interface MultiSelectProps {
   refreshOptions?: () => Promise<void>
   returnId?: boolean
   columnId?: string
-  autoOpen?: boolean // Nueva prop para auto-abrir
+  autoOpen?: boolean // New prop for auto-open
   onKeyDown?: (e: React.KeyboardEvent) => void
 }
 
@@ -52,11 +52,11 @@ export function MultiSelect({
   const inputRef = useRef<HTMLInputElement>(null)
   const [localNewItems, setLocalNewItems] = useState<{ value: string; label: string; id?: number }[]>([])
 
-  // Efecto para auto-abrir el popover cuando se solicita
+  // Effect to auto-open popover when requested
   useEffect(() => {
     if (autoOpen) {
       setOpen(true)
-      // Enfocar el input después de un pequeño delay para asegurar que el popover esté abierto
+      // Focus input after a small delay to ensure popover is open
       const timer = setTimeout(() => {
         inputRef.current?.focus()
       }, 150)
@@ -64,7 +64,7 @@ export function MultiSelect({
     }
   }, [autoOpen])
 
-  // Función para verificar si existe una coincidencia exacta (case insensitive)
+  // Function to check for exact match (case insensitive)
   const hasExactMatch = (searchValue: string) => {
     const normalizedSearch = searchValue.trim().toLowerCase();
     return options.some(option => 
@@ -72,14 +72,14 @@ export function MultiSelect({
     );
   };
 
-  // Usar useMemo para filtrar las opciones de manera eficiente
+  // Use useMemo to filter options efficiently
   const filteredOptions = useMemo(() => {
     return options.filter(option => 
       !selected.includes(returnId ? option.id?.toString() || "" : option.value) || singleSelect
     );
   }, [options, selected, singleSelect, returnId]);
 
-  // Función para obtener estilos de color consistentes
+  // Function to get consistent color styles
   const getColorStyle = (label: string) => {
     const index = getConsistentColorIndex(label, columnId, colorClasses.length);
     const color = colorClasses[index];
@@ -144,15 +144,15 @@ export function MultiSelect({
           }
 
           toast({
-            title: "✅ Creado exitosamente",
-            description: `El ${tableName.slice(0, -1)} se ha añadido to the database.`,
+            title: "✅ Created successfully",
+            description: `The ${tableName.slice(0, -1)} has been added to the database.`,
           })
         }
       } catch (error) {
         console.error(`Error creating ${tableName}:`, error)
         toast({
           title: "❌ Error",
-          description: `No se pudo crear el ${tableName.slice(0, -1)}.`,
+          description: `Could not create the ${tableName.slice(0, -1)}.`,
           variant: "destructive",
         })
       }
@@ -186,8 +186,8 @@ export function MultiSelect({
       if (searchError) throw searchError
       if (!existingItems || existingItems.length === 0) {
         toast({
-          title: "❌ No encontrado",
-          description: `El ${tableName.slice(0, -1)} no existe en la base de datos.`,
+          title: "❌ Not found",
+          description: `The ${tableName.slice(0, -1)} does not exist in the database.`,
           variant: "destructive",
         })
         return
@@ -202,14 +202,14 @@ export function MultiSelect({
       onChange(selected.filter((item) => item !== itemToDelete))
 
       toast({
-        title: "✅ Eliminado exitosamente",
-        description: `El ${tableName.slice(0, -1)} se ha eliminado de la base de datos.`,
+        title: "✅ Deleted successfully",
+        description: `The ${tableName.slice(0, -1)} has been removed from the database.`,
       })
     } catch (error) {
       console.error(`Error deleting ${tableName}:`, error)
       toast({
         title: "❌ Error",
-        description: `No se pudo eliminar el ${tableName.slice(0, -1)}.`,
+        description: `Could not delete the ${tableName.slice(0, -1)}.`,
         variant: "destructive",
       })
     } finally {
@@ -218,7 +218,7 @@ export function MultiSelect({
     }
   }
 
-  // Función auxiliar para verificar si una opción está seleccionada
+  // Helper function to check if an option is selected
   const isOptionSelected = (optionValue: string) => {
     return selected.includes(optionValue);
   }
@@ -299,7 +299,7 @@ export function MultiSelect({
             <CommandList className="max-h-64">
               <CommandEmpty>
                 <div className="py-6 text-center text-sm text-muted-foreground">
-                  No se encontraron resultados
+                  No results found
                 </div>
               </CommandEmpty>
               <CommandGroup className="p-2">
@@ -312,7 +312,7 @@ export function MultiSelect({
                   >
                     <div className="flex items-center">
                       <Plus className="mr-3 h-3 w-3 text-primary" />
-                      <span className="font-medium text-primary">Crear "{inputValue.trim()}"</span>
+                      <span className="font-medium text-primary">Create "{inputValue.trim()}"</span>
                     </div>
                   </CommandItem>
                 )}
@@ -379,11 +379,11 @@ export function MultiSelect({
         isOpen={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
         onConfirm={handleDelete}
-        title={`¿Eliminar ${tableName?.slice(0, -1) || "elemento"}?`}
-        description={`Esta acción eliminará permanentemente "${itemToDelete}" de la base de datos.${
-          tableName === "authors" ? " Todos los libros asociados a este autor permanecerán pero perderán la relación." : ""
+        title={`Delete ${tableName?.slice(0, -1) || "element"}?`}
+        description={`This action will permanently delete "${itemToDelete}" from the database.${
+          tableName === "authors" ? " All books associated with this author will remain but will lose the relationship." : ""
         }`}
-        confirmText="Eliminar"
+        confirmText="Delete"
         confirmVariant="destructive"
       />
     </>

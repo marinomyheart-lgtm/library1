@@ -13,7 +13,7 @@ import { toast } from "sonner"
 import { ConfirmDeleteDialog } from "./confirm-delete-dialog"
 import { EditableCell } from "./EditableCell"
 import { AVAILABLE_COLORS, getConsistentColorIndex } from "@/lib/colors"
-import {FavoriteButton } from "./book-components"
+import { FavoriteButton } from "./book-components"
 
 interface BookTableProps {
   books: Book[]
@@ -33,25 +33,25 @@ interface Column {
 }
 
 const initialColumns: Column[] = [
-  { id: "number", label: "Nº", width: 80, minWidth: 80, isSticky: true, left: 0 },
-  { id: "title", label: "Título", width: 220, minWidth: 180, isSticky: true, left: 70 },
-  { id: "author", label: "Autor", width: 160, minWidth: 130 },
-  { id: "universe", label: "Universo", width: 130, minWidth: 110 },
-  { id: "rating", label: "Calificación", width: 110, minWidth: 90 },
-  { id: "type", label: "Tipo", width: 70, minWidth: 70 },
-  { id: "genre", label: "Género", width: 80, minWidth: 80 },
-  { id: "dateStarted", label: "Inicio", width: 70, minWidth: 70 },
-  { id: "dateRead", label: "Fin", width: 70, minWidth: 70 },
-  { id: "days", label: "Días", width: 60, minWidth: 60 },
-  { id: "year", label: "Año", width: 60, minWidth: 60 },
-  { id: "pages", label: "Páginas", width: 80, minWidth: 80 },
-  { id: "publisher", label: "Editorial", width: 100, minWidth: 100 },
-  { id: "language", label: "Idioma", width: 90, minWidth: 90 },
-  { id: "era", label: "Época", width: 80, minWidth: 80 },
-  { id: "format", label: "Formato", width: 90, minWidth: 90 },
-  { id: "audience", label: "Público", width: 90, minWidth: 90 },
-  { id: "readingDensity", label: "Lectura", width: 80, minWidth: 80 },
-  { id: "awards", label: "Premios", width: 170, minWidth: 170 },
+  { id: "number", label: "No.", width: 80, minWidth: 80, isSticky: true, left: 0 },
+  { id: "title", label: "Title", width: 220, minWidth: 180, isSticky: true, left: 70 },
+  { id: "author", label: "Author", width: 160, minWidth: 130 },
+  { id: "universe", label: "Universe", width: 130, minWidth: 110 },
+  { id: "rating", label: "Rating", width: 70, minWidth: 70 },
+  { id: "type", label: "Type", width: 70, minWidth: 70 },
+  { id: "genre", label: "Genre", width: 80, minWidth: 80 },
+  { id: "dateStarted", label: "Started", width: 75, minWidth: 75 },
+  { id: "dateRead", label: "Finished", width: 80, minWidth: 80 },
+  { id: "days", label: "Days", width: 60, minWidth: 60 },
+  { id: "year", label: "Year", width: 55, minWidth: 55 },
+  { id: "pages", label: "Pages", width: 65, minWidth: 65 },
+  { id: "publisher", label: "Publisher", width: 100, minWidth: 100 },
+  { id: "language", label: "Language", width: 85, minWidth: 85 },
+  { id: "era", label: "Era", width: 75, minWidth: 75 },
+  { id: "format", label: "Format", width: 90, minWidth: 90 },
+  { id: "audience", label: "Audience", width: 90, minWidth: 90 },
+  { id: "readingDensity", label: "Reading", width: 80, minWidth: 80 },
+  { id: "awards", label: "Awards", width: 170, minWidth: 170 },
 ]
 
 const withStickyOffsets = (cols: Column[]): Column[] => {
@@ -68,7 +68,7 @@ const withStickyOffsets = (cols: Column[]): Column[] => {
 
 const availableColors = AVAILABLE_COLORS
 
-// Función para obtener estilos de color consistentes por columna
+// Function to get consistent color styles by column
 const getBadgeStyle = (columnId: string, value: string) => {
   if (!value) {
     return {
@@ -200,9 +200,9 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
       try {
         await supabase.rpc("delete_and_reorder_book", { p_book_id: bookToDeleteId })
         refreshData?.()
-        toast.success("Libro eliminado y orden actualizado correctamente")
+        toast.success("Book deleted and order updated successfully")
       } catch (error) {
-        toast.error("Error al eliminar el libro")
+        toast.error("Error deleting book")
       } finally {
         setShowDeleteDialog(false)
         setBookToDeleteId(null)
@@ -229,7 +229,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
         if (insertError) throw insertError
       }
 
-      // Crear el libro actualizado
+      // Create the updated book
       const currentBook = books.find((b) => b.id === bookId)!
       const updatedBook = {
         ...currentBook,
@@ -240,11 +240,11 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
       }
 
       onBookUpdate(updatedBook)
-      toast.success("Géneros actualizados correctamente")
+      toast.success("Genres updated successfully")
       setEditingCell(null)
     } catch (error) {
       console.error("Error updating genres:", error)
-      toast.error("No se pudieron actualizar los géneros")
+      toast.error("Could not update genres")
       setEditingCell(null)
     }
   }
@@ -363,12 +363,12 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
   }
 
  const renderDisplayValue = (columnId: string, value: any, bookId?: number) => {
-  // Si el valor es null, undefined, o string vacío, retornar null
+  // If value is null, undefined, empty string, or 0, return null
   if (value === null || value === undefined || value === "" || value === 0) {
     return null;
   }
 
-  // Para arrays vacíos (como géneros)
+  // For empty arrays (like genres)
   if (Array.isArray(value) && value.length === 0) {
     return null;
   }
@@ -395,7 +395,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
     case "author":
       const book = books.find((b) => b.id === bookId)
       const authorName = book?.author?.name || value
-      // Verificar si realmente hay un autor
+      // Check if there's actually an author
       if (!authorName) return null;
       
       return (
@@ -416,7 +416,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
     case "format":
     case "audience":
     case "readingDensity":
-      // Solo mostrar si hay valor
+      // Only show if there's a value
       if (!value) return null;
       
       return (
@@ -435,22 +435,24 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
       if (!value) return null;
       let displayDate;
       if (typeof value === 'string' && value.includes('-')) {
-        // Para formato YYYY-MM-DD, agregar hora local
-        displayDate = new Date(value + 'T12:00:00'); // Mediodía local
+        // For YYYY-MM-DD format, add local time
+        displayDate = new Date(value + 'T12:00:00'); // Local noon
       } else {
         displayDate = new Date(value);
       }
       return (
-        <span className="text-slate-600 font-medium text-xs">
-          {displayDate.toLocaleDateString("es-ES")}
-        </span>
+        <div className="flex justify-center w-full">
+          <span className="text-slate-600 font-medium text-xs">
+            {displayDate.toLocaleDateString("en-US")}
+          </span>
+        </div>
       )
 
     case "year":
       if (!value) return null;
       
       return (
-        <div className="text-center">
+        <div className="flex justify-center w-full">
           <Badge
             variant="outline"
             style={getBadgeStyle("year", value.toString())}
@@ -466,7 +468,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
       if (!value) return null;
       
       return (
-        <div className="text-center">
+        <div className="flex justify-center w-full">
           <span className="inline-flex items-center justify-center px-1 py-0 rounded-md bg-gradient-to-br from-slate-100 to-slate-200 text-slate-700 font-semibold text-xs">
             {value}
           </span>
@@ -499,7 +501,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
 
     case "genre":
       const maxVisible = 3
-      // Solo mostrar si hay géneros
+      // Only show if there are genres
       if (!value || value.length === 0) return null;
       
       return (
@@ -524,11 +526,11 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
       )
 
     case "days":
-      // Este caso lo manejaremos en renderCellContent
+      // This case will be handled in renderCellContent
       return null;
 
     default:
-      // Para otros campos, solo mostrar si hay valor
+      // For other fields, only show if there's a value
       if (!value) return null;
       return <span className="text-slate-600 text-xs">{value}</span>
   }
@@ -555,7 +557,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
                   let authorName = null
                   let seriesName = null
 
-                  // Primero obtener los nombres si es necesario
+                  // First get names if necessary
                   if (columnId === "author" && newValue) {
                     const { data: authorData } = await supabase
                       .from("authors")
@@ -574,7 +576,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
                     seriesName = seriesData?.name || "Unknown"
                   }
 
-                  // Configurar updateData
+                  // Configure updateData
                   switch (columnId) {
                     case "title":
                       updateData.title = newValue
@@ -629,15 +631,15 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
                       break
                   }
 
-                  // Actualizar la base de datos
+                  // Update the database
                   const { error } = await supabase.from("books").update(updateData).eq("id", book.id)
                   if (error) throw error
 
-                  // Buscar el libro actual en books
+                  // Find the current book in books
                   const currentBook = books.find((b) => b.id === book.id)!
                   const updatedBook = { ...currentBook }
 
-                  // Actualizar el campo correspondiente
+                  // Update the corresponding field
                   switch (columnId) {
                     case "title":
                       updatedBook.title = newValue
@@ -699,13 +701,13 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
                       }
                       break
                   }
-                  onBookUpdate(updatedBook) // ← Notificar al padre
+                  onBookUpdate(updatedBook) // ← Notify parent
 
-                  toast.success("Campo actualizado correctamente")
+                  toast.success("Field updated successfully")
                   setEditingCell(null)
                 } catch (error) {
                   console.error("Error updating field:", error)
-                  toast.error("No se pudo actualizar el campo")
+                  toast.error("Could not update field")
                   setEditingCell(null)
                 }
               }
@@ -739,16 +741,16 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
           const updatedBook = { ...book, favorite: newFavoriteValue }
           onBookUpdate(updatedBook)
 
-          toast.success(newFavoriteValue ? "Libro marcado como favorito" : "Libro desmarcado como favorito")
+          toast.success(newFavoriteValue ? "Book marked as favorite" : "Book unmarked as favorite")
         } catch (error) {
           console.error("Error updating favorite:", error)
-          toast.error("No se pudo actualizar el favorito")
+          toast.error("Could not update favorite")
         }
       }
 
       return (
         <div className="flex items-center justify-between gap-1 px-1">
-          {/* Botón de eliminar a la izquierda */}
+          {/* Delete button on the left */}
           <Button
             variant="ghost"
             size="sm"
@@ -757,17 +759,17 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
               e.stopPropagation()
               handleDeleteClick(book.id)
             }}
-            title="Eliminar libro"
+            title="Delete book"
           >
             <Trash2 className="h-3 w-3" />
           </Button>
 
-          {/* Número en el centro */}
+          {/* Number in the center */}
           <div className="w-5 h-5 rounded-full bg-v200 text text-xs font-semibold flex items-center justify-center shadow-sm flex-shrink-0">
             {book.orden}
           </div>
 
-          {/* Corazón a la derecha */}
+          {/* Heart on the right */}
           <div className={`transition-all duration-200 ${
             book.favorite ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
           }`}>
@@ -791,11 +793,11 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
           onMouseEnter={() => setHoveredTitle(index)}
           onMouseLeave={() => setHoveredTitle(null)}
         >
-          {/* Contenedor principal del título que se expande */}
+          {/* Main title container that expands */}
           <div 
             className="flex-1 overflow-hidden"
             style={{ 
-              minWidth: 0 // Esto es crucial para que funcione flexbox con text-overflow
+              minWidth: 0 // This is crucial for flexbox with text-overflow to work
             }}
           >
             <span 
@@ -806,7 +808,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
             </span>
           </div>
           
-          {/* Botón de vista que solo aparece al hacer hover */}
+          {/* View button that only appears on hover */}
           <div className="flex-shrink-0 opacity-0 group-hover/title:opacity-100 transition-opacity duration-200">
             <Button
               variant="ghost"
@@ -816,7 +818,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
                 e.stopPropagation()
                 handleViewBook(book.id)
               }}
-              title="Ver detalles"
+              title="View details"
             >
               <Eye className="h-3 w-3" />
             </Button>
@@ -832,7 +834,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
           )
         : null;
 
-      // Solo mostrar si hay un valor calculado
+      // Only show if there's a calculated value
       if (!days) return null;
 
       return (
@@ -861,7 +863,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
       />
       <Card className="bg-white/95 backdrop-blur-sm border-2 overflow-hidden relative rounded-2xl">
         <div className="overflow-x-auto" ref={tableContainerRef}>
-          {/* OVERLAY GLOBAL para edición */}
+          {/* GLOBAL OVERLAY for editing */}
           {editingCell && (<div className="fixed inset-0 bg-transparent z-40 cursor-default" onClick={() => setEditingCell(null)} />)}
           <table ref={tableRef} className="w-full text-sm relative table-fixed">
             <thead className="bg-gradient-to-r from-slate-50 via-purple-50 to-slate-50 border-b bordes">

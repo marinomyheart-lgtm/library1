@@ -55,7 +55,7 @@ export default function SearchPage() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
-  // Realizar búsqueda cuando la página carga o el query cambia
+  // Perform search when page loads or query changes
   useEffect(() => {
     if (query) {
       performSearch(query)
@@ -101,7 +101,7 @@ export default function SearchPage() {
     setResults({ books: [], authors: [] })
     setHasSearched(false)
     router.push('/search')
-    // Enfocar el input
+    // Focus the input
     if (searchInputRef.current) {
       searchInputRef.current.focus()
     }
@@ -118,7 +118,7 @@ export default function SearchPage() {
 
   const totalResults = results.books.length + results.authors.length
 
-  // Filtrar resultados según la pestaña activa
+  // Filter results according to active tab
   const getFilteredResults = () => {
     switch (activeTab) {
       case 'books':
@@ -138,16 +138,16 @@ export default function SearchPage() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <h1 className="title">Resultados de Búsqueda</h1>
+          <h1 className="title">Search Results</h1>
         </div>
 
-        {/* Barra de búsqueda*/}
+        {/* Search bar */}
         <form onSubmit={handleSearch} className="flex gap-3 mb-8 max-w-xl mx-auto w-full">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-v500 hover:text-v600" />
             <Input
               ref={searchInputRef}
-              placeholder="Buscar libros o autores..."
+              placeholder="Search books or authors..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9 pr-8 h-11 bg-white border border-gray-300 focus:border-200 text-sm rounded-md shadow-sm"
@@ -168,23 +168,23 @@ export default function SearchPage() {
             className="h-11 px-6 button2 text-white text-sm rounded-md"
             disabled={loading}
           >
-            {loading ? 'Buscando...' : 'Buscar'}
+            {loading ? 'Searching...' : 'Search'}
           </Button>
         </form>
 
-        {/* Resultados */}
+        {/* Results */}
         {loading ? (
           <div className="flex justify-center items-center py-16">
             <div className="loading h-10 w-10 border-t-2 border-v500"></div>
-            <span className="ml-3 text-base text-v700">Buscando "{query}"...</span>
+            <span className="ml-3 text-base text-v700">Searching "{query}"...</span>
           </div>
         ) : hasSearched && (
           <div className="space-y-6">
 
-            {/* Tabs para filtrar resultados */}
+            {/* Tabs to filter results */}
             {totalResults > 0 && (
               <div className="flex border-b border-gray-200 mb-4">
-                {/* Libros - PRIMERO */}
+                {/* Books - FIRST */}
                 <button
                   className={`tab ${
                     activeTab === 'books' 
@@ -194,13 +194,13 @@ export default function SearchPage() {
                   onClick={() => setActiveTab('books')}
                 >
                   <BookOpen className="h-4 w-4" />
-                  <span>Libros</span>
+                  <span>Books</span>
                   <span className="bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full text-xs min-w-5">
                     {results.books.length}
                   </span>
                 </button>
                 
-                {/* Autores - SEGUNDO */}
+                {/* Authors - SECOND */}
                 <button
                   className={`tab ${
                     activeTab === 'authors' 
@@ -210,13 +210,13 @@ export default function SearchPage() {
                   onClick={() => setActiveTab('authors')}
                 >
                   <User className="h-4 w-4" />
-                  <span>Autores</span>
+                  <span>Authors</span>
                   <span className="bg-green-100 text-green-600 px-1.5 py-0.5 rounded-full text-xs min-w-5">
                     {results.authors.length}
                   </span>
                 </button>
 
-                {/* Todos - TERCERO */}
+                {/* All - THIRD */}
                 <button
                   className={`tab ${
                     activeTab === 'all' 
@@ -225,7 +225,7 @@ export default function SearchPage() {
                   }`}
                   onClick={() => setActiveTab('all')}
                 >
-                  <span>Todos</span>
+                  <span>All</span>
                   <span className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded-full text-xs min-w-5">
                     {totalResults}
                   </span>
@@ -233,7 +233,7 @@ export default function SearchPage() {
               </div>
             )}
 
-            {/* Contenido según la pestaña activa */}
+            {/* Content according to active tab */}
             {(activeTab === 'books' || activeTab === 'all') && filteredResults.books.length > 0 && (
               <div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
@@ -244,7 +244,7 @@ export default function SearchPage() {
                       onClick={() => handleBookSelect(book)}
                     >
                       <CardContent className="p-3">
-                        {/* Contenido del libro - SIN OVERLAY */}
+                        {/* Book content - WITHOUT OVERLAY */}
                         <div className="aspect-[3/4] mb-2 bg-gray-50 rounded-md flex items-center justify-center overflow-hidden shadow-xs">
                           {book.volumeInfo?.imageLinks?.thumbnail ? (
                             <img
@@ -265,11 +265,11 @@ export default function SearchPage() {
                           {book.volumeInfo?.title}
                         </h3>
                         <p className="text-xs text-gray-600 line-clamp-1 mb-1">
-                          {book.volumeInfo?.authors?.join(', ') || 'Autor desconocido'}
+                          {book.volumeInfo?.authors?.join(', ') || 'Unknown author'}
                         </p>
                         {book.volumeInfo?.publishedDate && (
                           <p className="text-xs text-gray-500">
-                            {book.volumeInfo.publishedDate.split('-')[0]} {/* Solo el año */}
+                            {book.volumeInfo.publishedDate.split('-')[0]} {/* Only the year */}
                           </p>
                         )}
                       </CardContent>
@@ -305,7 +305,7 @@ export default function SearchPage() {
                             {author.name}
                           </h3>
                           <p className="text-xs text-gray-600">
-                            {author.booksCount} libro{author.booksCount !== 1 ? 's' : ''} {author.booksCount !== 1 ? 's' : ''}
+                            {author.booksCount} book{author.booksCount !== 1 ? 's' : ''}
                           </p>
                         </div>
                       </CardContent>
@@ -315,22 +315,22 @@ export default function SearchPage() {
               </div>
             )}
 
-            {/* Sin resultados para la pestaña activa */}
+            {/* No results for active tab */}
             {hasSearched && filteredResults.books.length === 0 && filteredResults.authors.length === 0 && (
               <div className="text-center py-12">
                 <BookOpen className="h-12 w-12 text-v500 mx-auto mb-3" />
                 <h3 className="text-lg font-semibold text-gray-600 mb-2">
-                  No se encontraron resultados
+                  No results found
                 </h3>
                 <p className="text-gray-500 text-sm">
-                  Intenta con otros términos de búsqueda o verifica la ortografía.
+                  Try with other search terms or check the spelling.
                 </p>
               </div>
             )}
           </div>
         )}
 
-        {/* Modal de detalles del libro */}
+        {/* Book details modal */}
         <BookSearchDetails
           book={selectedBook}
           isOpen={isDetailsOpen}

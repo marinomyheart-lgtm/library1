@@ -24,7 +24,7 @@ export function ViewModeToggle() {
           <div className="bg-current rounded-sm"></div>
           <div className="bg-current rounded-sm"></div>
         </div>
-        Portadas
+        Covers
       </Button>
 
       <Button
@@ -42,7 +42,7 @@ export function ViewModeToggle() {
           <div className="bg-current h-0.5 rounded"></div>
           <div className="bg-current h-0.5 rounded"></div>
         </div>
-        Lista
+        List
       </Button>
     </div>
   )
