@@ -16,7 +16,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { Database, BookOpen, Users, BarChart3, Quote, Trophy, BookMarked, Plus } from "lucide-react"
+import { Database, BookOpen, Users, BarChart3, Quote, Trophy, BookMarked } from "lucide-react"
 import Link from "next/link"
 import "../styles/globals.css"
 import { Toaster } from 'sonner';
@@ -24,44 +24,44 @@ import { Toaster } from 'sonner';
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Mi Biblioteca - Plataforma de Lectura Personal",
-  description: "Tu espacio personal para gestionar y organizar tus lecturas",
+  title: "My Library - Personal Reading Platform",
+  description: "Your personal space to manage and organize your readings",
   generator: "v0.dev",
 }
 
 const menuItems = [
   {
-    title: "Mi Biblioteca",
+    title: "My Library",
     url: "/",
     icon: Database,
     color: "#f8f3fc",
   },
   {
-    title: "Géneros",
+    title: "Genres",
     url: "/genres",
     icon: BookOpen,
     color: "#fcf1f6",
   },
   {
-    title: "Autores",
+    title: "Authors",
     url: "/authors",
     icon: Users,
     color: "#e7f3f8",
   },
   {
-    title: "Estadísticas",
+    title: "Statistics",
     url: "/stats",
     icon: BarChart3,
     color: "#fdebec",
   },
   {
-    title: "Citas",
+    title: "Quotes",
     url: "/quotes",
     icon: Quote,
     color: "#edf3ec",
   },
   {
-    title: "Desafíos",
+    title: "Challenges",
     url: "/challenges",
     icon: Trophy,
     color: "#fbecdd",
@@ -80,7 +80,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es">
+    <html lang="en">
       <body className={inter.className}>
           <Toaster position="top-right" />
           <ViewModeProvider>
@@ -90,7 +90,7 @@ export default function RootLayout({
                 <div className="flex items-center justify-between px-6 py-4">
                   <div className="flex items-center gap-2">
                     <BookOpen className="h-6 w-6 text-primary" />
-                    <span className="font-semibold text-lg">Mi Biblioteca</span>
+                    <span className="font-semibold text-lg">My Library</span>
                   </div>
 
                   <nav className="flex items-center gap-1">
@@ -121,12 +121,13 @@ export default function RootLayout({
                   <SidebarHeader className="border-b">
                     <div className="flex items-center gap-2 px-2 py-2">
                       <BookOpen className="h-6 w-6 text-primary" />
-                      <span className="font-semibold text-lg">Mi Biblioteca</span>
+                      <span className="font-semibold text-lg">My Library</span>
                     </div>
                   </SidebarHeader>
                   <SidebarContent>
+                    <h2 className="sr-only">Navigation Menu</h2>
                     <SidebarGroup>
-                      <SidebarGroupLabel>Navegación</SidebarGroupLabel>
+                      <SidebarGroupLabel>Navigation</SidebarGroupLabel>
                       <SidebarGroupContent>
                         <SidebarMenu>
                           {menuItems.map((item) => (
@@ -150,7 +151,7 @@ export default function RootLayout({
                     </SidebarGroup>
 
                     <SidebarGroup>
-                      <SidebarGroupLabel>Acciones</SidebarGroupLabel>
+                      <SidebarGroupLabel>Actions</SidebarGroupLabel>
                       <SidebarGroupContent>
                         <SidebarMenu>
                         </SidebarMenu>
@@ -162,7 +163,7 @@ export default function RootLayout({
                   <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
                     <SidebarTrigger className="-ml-1" />
                     <div className="ml-auto">
-                      {/* Aquí puedes agregar elementos del header como búsqueda, perfil, etc. */}
+                      {/* Here you can add header elements like search, profile, etc. */}
                     </div>
                   </header>
                   <main className="flex-1 overflow-auto">{children}</main>

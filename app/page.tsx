@@ -30,7 +30,7 @@ export default function HomePage() {
   const [showAddBook, setShowAddBook] = useState(false)
   const [prefilledData, setPrefilledData] = useState<any>(null)
   
-  // Estados para las opciones (necesarios para el analizador)
+  // States for options (needed for the analyzer)
   const [authorsOptions, setAuthorsOptions] = useState<{ value: string; label: string; id?: number }[]>([])
   const [genresOptions, setGenresOptions] = useState<{ value: string; label: string; id?: number }[]>([])
   const [seriesOptions, setSeriesOptions] = useState<{ value: string; label: string; id?: number }[]>([])
@@ -42,17 +42,17 @@ export default function HomePage() {
     averageRating: 0,
   })
 
-  // Función para cargar las opciones necesarias para el analizador
+  // Function to load the options needed for the analyzer
   const fetchOptions = async () => {
     try {
-      // Autores
+      // Authors
       const { data: authors } = await supabase
         .from("authors")
         .select("id, name")
         .order("name", { ascending: true })
       setAuthorsOptions(authors?.map((a) => ({ value: a.name, label: a.name, id: a.id })) || [])
 
-      // Géneros
+      // Genres
       const { data: genres } = await supabase
         .from("genres")
         .select("id, name")
@@ -70,7 +70,7 @@ export default function HomePage() {
     }
   }
 
-  // Función para cargar los libros desde Supabase
+  // Function to load books from Supabase
   const fetchBooks = async () => {
     try {
       setLoading(true)
@@ -81,14 +81,14 @@ export default function HomePage() {
       
       if (error) throw error
       
-      // Obtener citas
+      // Get quotes
       const { data: quotesData, error: quotesError } = await supabase
         .from('quotes')
         .select('*')
       
       if (quotesError) throw quotesError
       
-      // Crear el mapa de citas
+      // Create the quotes map
       const quotesMap = quotesData?.reduce((acc, quote) => {
         if (quote.book_id) {
           if (!acc[quote.book_id]) {
@@ -110,7 +110,7 @@ export default function HomePage() {
     }
   }
 
-  // Función para calcular estadísticas
+  // Function to calculate statistics
   const calculateStats = (books: Book[]) => {
     const currentYear = new Date().getFullYear()
     
@@ -129,38 +129,38 @@ export default function HomePage() {
     setStatsData(stats)
   }
    
-  // Función para manejar la selección de libro
+  // Function to handle book selection
   const handleBookSelect = (book: Book) => {
     setSelectedBook(book)
   }
 
-  // Función para actualizar libros
+  // Function to update books
   const handleBookUpdate = (updatedBook: Book) => {
     setBooks(prevBooks => 
       prevBooks.map(book => 
         book.id === updatedBook.id ? updatedBook : book
       )
     )
-    // Si el libro actualizado es el seleccionado, actualizarlo también
+    // If the updated book is the selected one, update it too
     if (selectedBook && selectedBook.id === updatedBook.id) {
       setSelectedBook(updatedBook)
     }
   }
 
-  // Función para manejar selección desde búsqueda
+  // Function to handle selection from search
   const handleSearchBookSelect = (book: any) => {
-    console.log('Libro seleccionado desde búsqueda:', book)
+    console.log('Book selected from search:', book)
   }
 
-  // Función para manejar la selección desde el analizador de texto
+  // Function to handle selection from text analyzer
   const handleAnalyzerBookSelect = async (bookData: any) => {
-    // 🎯 USAR DIRECTAMENTE LOS DATOS SIN PROCESAMIENTO EXTRA
+    // 🎯 USE DATA DIRECTLY WITHOUT EXTRA PROCESSING
     setPrefilledData(bookData)
     setShowAnalyzer(false)
     setShowAddBook(true)
   }
 
-  // Cargar libros y opciones al montar el componente
+  // Load books and options when component mounts
   useEffect(() => {
     fetchBooks()
     fetchOptions()
@@ -192,7 +192,7 @@ export default function HomePage() {
           return (b.pages ?? 0) - (a.pages ?? 0)
         case "pages-asc":
           return (a.pages ?? 0) - (b.pages ?? 0)
-        case "orden-asc":
+        case "order-asc":
           return a.orden - b.orden 
         default:  
           return b.orden - a.orden 
@@ -214,7 +214,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-v50">
       <div className="container mx-auto px-4 py-8">
         {/* Header with Add Book Button */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
+        <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="title">My Library</h1>
             <p className="text-v600">Manage and explore your personal book collection</p>
@@ -248,8 +248,8 @@ export default function HomePage() {
         </div>
 
         {/* Dashboard Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4">
-            <Card className="card">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <Card className="card">
             <CardHeader className="card-header">
               <CardTitle className="card-title">Books Read</CardTitle>
               <BookIcon className="icon" />
@@ -394,7 +394,7 @@ export default function HomePage() {
       <div className="px-4 lg:px-10">
         {/* Books Display */}
         {viewMode === "cards" ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 sm:gap-6">
             {filteredBooks.map((book) => (
               <BookCard key={book.id} book={book} />
             ))}
