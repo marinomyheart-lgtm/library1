@@ -286,7 +286,7 @@ export default function HomePage() {
         </div>
 
         {/* Filters and Search - Redesigned */}
-        <div className="mb-8 space-y-4">
+        <div className="mb-0 space-y-4">
           {/* Filters + Search Row */}
           <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-center justify-between">
             {/* Search Bar */}
@@ -388,7 +388,10 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+      </div>
 
+      {/* Books Display */}
+      <div className="px-4 lg:px-10">
         {/* Books Display */}
         {viewMode === "cards" ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
@@ -397,7 +400,13 @@ export default function HomePage() {
             ))}
           </div>
         ) : (
-          <BookTable books={filteredBooks} quotesMap={quotesMap} refreshData={fetchBooks} onBookSelect={handleBookSelect} onBookUpdate={handleBookUpdate}/>
+          <BookTable
+            books={filteredBooks}
+            quotesMap={quotesMap}
+            refreshData={fetchBooks}
+            onBookSelect={handleBookSelect}
+            onBookUpdate={handleBookUpdate}
+          />
         )}
 
         {/* Modal de detalles del libro */}

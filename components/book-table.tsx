@@ -859,7 +859,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
         onConfirm={handleDeleteBook}
         confirmVariant="destructive"
       />
-      <Card className="bg-white/95 backdrop-blur-sm border-2 bordes overflow-hidden relative rounded-2xl">
+      <Card className="bg-white/95 backdrop-blur-sm border-2 overflow-hidden relative rounded-2xl">
         <div className="overflow-x-auto" ref={tableContainerRef}>
           {/* OVERLAY GLOBAL para edición */}
           {editingCell && (<div className="fixed inset-0 bg-transparent z-40 cursor-default" onClick={() => setEditingCell(null)} />)}
@@ -871,7 +871,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
                     key={column.id}
                     className={`relative text-left p-1 font-semibold text-slate-700 border-r border-v100 last:border-r-0 text-xs ${
                       column.isSticky ? "sticky z-20 bg-gradient-to-r from-slate-50 via-v50 to-slate-50" : ""
-                    }`}
+                     } ${column.id === "number" ? "text-center" : ""}`}
                     style={{
                       width: column.width,
                       minWidth: column.minWidth,
@@ -882,7 +882,7 @@ export function BookTable({ books, quotesMap, refreshData, onBookSelect, onBookU
                     onDragOver={(e) => e.preventDefault()}
                     onDrop={(e) => handleColumnDrop(e, index)}
                   >
-                    <div className="flex items-center gap-1.5">
+                    <div className={`flex items-center gap-1.5 ${column.id === "number" ? "justify-center" : ""}`}>
                       {!column.isSticky && (
                         <GripVertical className="h-3 w-3 text-slate-400 cursor-move hover:text-slate-600 transition-colors" />
                       )}
