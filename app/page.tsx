@@ -212,62 +212,63 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-v50">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header with Add Book Button */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="title">My Library</h1>
-            <p className="text-v600">Manage and explore your personal book collection</p>
+      {/* Container with responsive padding */}
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 lg:py-8">
+        {/* Header with Add Book Button - Responsive layout */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+          <div className="flex-1 min-w-0">
+            <h1 className="title text-2xl sm:text-3xl lg:text-4xl">My Library</h1>
+            <p className="text-v600 text-sm sm:text-base">Manage and explore your personal book collection</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3 w-full sm:w-auto justify-start sm:justify-end">
             <BookSearchButton onBookSelect={handleSearchBookSelect} />
             <Button
               onClick={fetchBooks}
               disabled={loading}
               variant="outline"
-              className="button-tran"
+              className="button-tran h-9 sm:h-10"
             >
-              <RefreshCw className={`h-3 w-3 ${loading ? "animate-spin" : ""}`}/>
+              <RefreshCw className={`h-3 w-3 sm:h-4 sm:w-4 ${loading ? "animate-spin" : ""}`}/>
             </Button>
             <Button
               onClick={() => setShowAnalyzer(true)}
               variant="outline"
-              className="button-tran"
+              className="button-tran h-9 sm:h-10"
             >
-              <BookOpen className="h-4 w-4 mr-2" />
-              Analyze Text
+              <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="text-xs sm:text-sm">Analyze Text</span>
             </Button>
             <Button
               onClick={() => setShowAddBook(true)}
-              className="button1"
+              className="button1 h-9 sm:h-10"
             >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Book
+              <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="text-xs sm:text-sm">Add Book</span>
             </Button>
           </div>
         </div>
 
-        {/* Dashboard Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {/* Dashboard Stats - Responsive grid */}
+        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <Card className="card">
             <CardHeader className="card-header">
-              <CardTitle className="card-title">Books Read</CardTitle>
-              <BookIcon className="icon" />
+              <CardTitle className="card-title text-sm sm:text-base">Books Read</CardTitle>
+              <BookIcon className="icon h-4 w-4 sm:h-5 sm:w-5" />
             </CardHeader>
             <CardContent className="px-3 pb-3">
-              <div className="card-div">{statsData.totalBooks}</div>
-              <p className="card-p">+{statsData.booksThisYear} this year</p>
+              <div className="card-div text-xl sm:text-2xl">{statsData.totalBooks}</div>
+              <p className="card-p text-xs sm:text-sm">+{statsData.booksThisYear} this year</p>
             </CardContent>
           </Card>
 
           <Card className="card">
             <CardHeader className="card-header">
-              <CardTitle className="card-title">Pages Read</CardTitle>
-              <BookOpen className="icon" />
+              <CardTitle className="card-title text-sm sm:text-base">Pages Read</CardTitle>
+              <BookOpen className="icon h-4 w-4 sm:h-5 sm:w-5" />
             </CardHeader>
             <CardContent className="px-3 pb-3">
-              <div className="card-div">{statsData.totalPages.toLocaleString()}</div>
-              <p className="card-p">
+              <div className="card-div text-xl sm:text-2xl">{statsData.totalPages.toLocaleString()}</div>
+              <p className="card-p text-xs sm:text-sm">
                 Average: {Math.round(statsData.totalPages / statsData.totalBooks)} per book
               </p>
             </CardContent>
@@ -275,54 +276,154 @@ export default function HomePage() {
 
           <Card className="card">
             <CardHeader className="card-header">
-              <CardTitle className="card-title">Average Rating</CardTitle>
-              <Star className="icon" />
+              <CardTitle className="card-title text-sm sm:text-base">Average Rating</CardTitle>
+              <Star className="icon h-4 w-4 sm:h-5 sm:w-5" />
             </CardHeader>
             <CardContent className="px-3 pb-3">
-              <div className="card-div">{statsData.averageRating}</div>
-              <p className="card-p">out of 10 points</p>
+              <div className="card-div text-xl sm:text-2xl">{statsData.averageRating}</div>
+              <p className="card-p text-xs sm:text-sm">out of 10 points</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Filters and Search - Redesigned */}
+        {/* Filters and Search - Responsive layout */}
         <div className="mb-0 space-y-4">
-          {/* Filters + Search Row */}
-          <div className="flex flex-col sm:flex-row flex-wrap gap-4 items-center justify-between">
+          {/* En móvil: dos filas separadas */}
+          <div className="sm:hidden space-y-3">
+            {/* Primera fila móvil: Search y View Toggle */}
+            <div className="flex gap-3 items-center">
+              {/* Search Bar */}
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-v500 z-10 pointer-events-none" />
+                <Input
+                  placeholder="Search by title"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9 h-9 bg-white/30 text-gray-700 backdrop-blur-md border bordes rounded-xl placeholder:text-gray-500 text-sm"
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 flex items-center justify-center text-v500 hover:text-v700"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+
+              {/* View Toggle */}
+              <ViewModeToggle />
+            </div>
+
+            {/* Segunda fila móvil: Filtros en grid de 2 columnas */}
+            <div className="grid grid-cols-2 gap-3 w-full">
+              {/* Favorites */}
+              <div className="w-full">
+                <Select value={selectedFavorites} onValueChange={setSelectedFavorites}>
+                  <SelectTrigger className="setrigger h-9 text-sm w-full max-w-full">
+                    <SelectValue placeholder="Filter" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all" className="select-item text-sm">
+                      <Library className="icons h-3 w-3" />
+                      All books
+                    </SelectItem>
+                    <SelectItem value="favorites" className="select-item text-sm">
+                      <Star className="icons h-3 w-3 fill-purple-500" />
+                      Only favorites
+                    </SelectItem>
+                    <SelectItem value="non-favorites" className="select-item text-sm">
+                      <Library className="icons h-3 w-3" />
+                      Not favorites
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Sort by */}
+              <div className="w-full">
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="setrigger h-9 text-sm w-full max-w-full">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="default" className="select-item text-sm">
+                      <SortDesc className="icons h-3 w-3" />
+                      Order (High to low)
+                    </SelectItem>
+                    <SelectItem value="order-asc" className="select-item text-sm">
+                      <SortAsc className="icons h-3 w-3" />
+                      Order (Low to high)
+                    </SelectItem>
+                    <SelectItem value="rating-desc" className="select-item text-sm">
+                      <SortDesc className="icons h-3 w-3" />
+                      Rating (Highest)
+                    </SelectItem>
+                    <SelectItem value="rating-asc" className="select-item text-sm">
+                      <SortAsc className="icons h-3 w-3" />
+                      Rating (Lowest)
+                    </SelectItem>
+                    <SelectItem value="title" className="select-item text-sm">
+                      <BookOpen className="icons h-3 w-3" />
+                      Title (A-Z)
+                    </SelectItem>
+                    <SelectItem value="author" className="select-item text-sm">
+                      <User className="icons h-3 w-3" />
+                      Author (A-Z)
+                    </SelectItem>
+                    <SelectItem value="pages-desc" className="select-item text-sm">
+                      <SortDesc className="icons h-3 w-3" />
+                      Pages (Most)
+                    </SelectItem>
+                    <SelectItem value="pages-asc" className="select-item text-sm">
+                      <SortAsc className="icons h-3 w-3" />
+                      Pages (Least)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          {/* En desktop: layout original (no tocar) */}
+          <div className="hidden sm:flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 items-center justify-between">
             {/* Search Bar */}
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-v500 z-10 pointer-events-none" />
+            <div className="relative w-full sm:w-64 order-1 sm:order-1">
+              <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-v500 z-10 pointer-events-none" />
               <Input
                 placeholder="Search by title"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 h-9 bg-white/30 text-gray-700 backdrop-blur-md border bordes rounded-2xl placeholder:text-gray-500"/>
+                className="pl-9 sm:pl-12 h-9 bg-white/30 text-gray-700 backdrop-blur-md border bordes rounded-xl sm:rounded-2xl placeholder:text-gray-500 text-sm"
+              />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-v500 hover:text-v700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center text-v500 hover:text-v700"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-3 h-3 sm:w-4 sm:h-4" />
                 </button>
               )}
             </div>
 
             {/* Filters */}
-            <div className="flex flex-wrap gap-3 items-center">
+            <div className="flex flex-wrap gap-2 sm:gap-3 items-center order-3 sm:order-2 w-full sm:w-auto justify-center sm:justify-start">
               {/* Favorites */}
               <Select value={selectedFavorites} onValueChange={setSelectedFavorites}>
-                <SelectTrigger className="setrigger"><SelectValue/></SelectTrigger>
+                <SelectTrigger className="setrigger h-9 text-sm">
+                  <SelectValue/>
+                </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all" className="select-item">
-                    <Library className="icons" />
+                  <SelectItem value="all" className="select-item text-sm">
+                    <Library className="icons h-3 w-3 sm:h-4 sm:w-4" />
                     All books
                   </SelectItem>
-                  <SelectItem value="favorites" className="select-item">
-                    <Star className="icons fill-purple-500" />
+                  <SelectItem value="favorites" className="select-item text-sm">
+                    <Star className="icons h-3 w-3 sm:h-4 sm:w-4 fill-purple-500" />
                     Only favorites
                   </SelectItem>
-                  <SelectItem value="non-favorites" className="select-item">
-                    <Library className="icons" />
+                  <SelectItem value="non-favorites" className="select-item text-sm">
+                    <Library className="icons h-3 w-3 sm:h-4 sm:w-4" />
                     Not favorites
                   </SelectItem>
                 </SelectContent>
@@ -330,43 +431,46 @@ export default function HomePage() {
 
               {/* Sort by */}
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="setrigger"><SelectValue/></SelectTrigger>
+                <SelectTrigger className="setrigger h-9 text-sm">
+                  <SelectValue/>
+                </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="default" className="select-item">
-                    <SortDesc className="icons" />
+                  <SelectItem value="default" className="select-item text-sm">
+                    <SortDesc className="icons h-3 w-3 sm:h-4 sm:w-4" />
                     Order (High to low)
                   </SelectItem>
-                  <SelectItem value="order-asc" className="select-item">
-                    <SortAsc className="icons" />
+                  <SelectItem value="order-asc" className="select-item text-sm">
+                    <SortAsc className="icons h-3 w-3 sm:h-4 sm:w-4" />
                     Order (Low to high)
                   </SelectItem>
-                  <SelectItem value="rating-desc" className="select-item">
-                    <SortDesc className="icons" />
+                  <SelectItem value="rating-desc" className="select-item text-sm">
+                    <SortDesc className="icons h-3 w-3 sm:h-4 sm:w-4" />
                     Rating (Highest)
                   </SelectItem>
-                  <SelectItem value="rating-asc" className="select-item">
-                    <SortAsc className="icons" />
+                  <SelectItem value="rating-asc" className="select-item text-sm">
+                    <SortAsc className="icons h-3 w-3 sm:h-4 sm:w-4" />
                     Rating (Lowest)
                   </SelectItem>
-                  <SelectItem value="title" className="select-item">
-                    <BookOpen className="icons" />
+                  <SelectItem value="title" className="select-item text-sm">
+                    <BookOpen className="icons h-3 w-3 sm:h-4 sm:w-4" />
                     Title (A-Z)
                   </SelectItem>
-                  <SelectItem value="author" className="select-item">
-                    <User className="icons" />
+                  <SelectItem value="author" className="select-item text-sm">
+                    <User className="icons h-3 w-3 sm:h-4 sm:w-4" />
                     Author (A-Z)
                   </SelectItem>
-                  <SelectItem value="pages-desc" className="select-item">
-                    <SortDesc className="icons" />
+                  <SelectItem value="pages-desc" className="select-item text-sm">
+                    <SortDesc className="icons h-3 w-3 sm:h-4 sm:w-4" />
                     Pages (Most)
                   </SelectItem>
-                  <SelectItem value="pages-asc" className="select-item">
-                    <SortAsc className="icons" />
+                  <SelectItem value="pages-asc" className="select-item text-sm">
+                    <SortAsc className="icons h-3 w-3 sm:h-4 sm:w-4" />
                     Pages (Least)
                   </SelectItem>
                 </SelectContent>
               </Select>
-               {/* Clear filters button - Only appears when there are active filters */}
+
+              {/* Clear filters button */}
               {(selectedFavorites !== "all" || sortBy !== "default" || searchTerm) && (
                 <Button
                   onClick={() => {
@@ -375,15 +479,15 @@ export default function HomePage() {
                   }}
                   variant="outline"
                   size="sm"
-                  className="h-9 text-sm bg-white/30 backdrop-blur-md border border-purple-300/30 rounded-2xl pl-5 transition-all duration-300 w-18"
+                  className="h-9 text-sm bg-white/30 backdrop-blur-md border border-purple-300/30 rounded-xl sm:rounded-2xl"
                 >
-                  <X className="icons" />
+                  <X className="icons h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
               )}
             </div>
 
             {/* View Toggle */}
-            <div className="w-full sm:w-auto">
+            <div className="w-full sm:w-auto order-2 sm:order-3">
               <ViewModeToggle />
             </div>
           </div>
@@ -391,10 +495,9 @@ export default function HomePage() {
       </div>
 
       {/* Books Display */}
-      <div className="px-4 lg:px-10">
-        {/* Books Display */}
+      <div className="px-3 sm:px-4 lg:px-6 xl:px-10">
         {viewMode === "cards" ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-7 gap-3 sm:gap-4 lg:gap-6">
             {filteredBooks.map((book) => (
               <BookCard key={book.id} book={book} />
             ))}
@@ -440,11 +543,11 @@ export default function HomePage() {
         />
 
         {filteredBooks.length === 0 && (
-          <Card className="text-center py-12 bg-white/60 backdrop-blur-sm border-0">
+          <Card className="text-center py-8 sm:py-12 bg-white/60 backdrop-blur-sm border-0 mx-3 sm:mx-0">
             <CardContent>
-              <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No books found</h3>
-              <p className="text-muted-foreground">
+              <BookOpen className="h-8 w-8 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-3 sm:mb-4" />
+              <h3 className="text-base sm:text-lg font-semibold mb-2">No books found</h3>
+              <p className="text-muted-foreground text-sm sm:text-base">
                 Try adjusting your search filters or add a new book to your library.
               </p>
             </CardContent>
