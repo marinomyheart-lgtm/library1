@@ -1,3 +1,4 @@
+// lib/colorUtils.ts
 export const AVAILABLE_COLORS = [
   { bg: "#ffe4e6", text: "text-rose-800", border: "border-rose-300" },
   { bg: "#fae8ff", text: "text-fuchsia-800", border: "border-fuchsia-300" },
@@ -32,6 +33,12 @@ export const getConsistentColorIndex = (value: string, columnId: string, totalCo
   columnMap.set(value, nextIndex);
   
   return nextIndex;
+};
+
+// Función para obtener el color bg para un género
+export const getGenreColor = (genreName: string): string => {
+  const colorIndex = getConsistentColorIndex(genreName, 'genres', AVAILABLE_COLORS.length);
+  return AVAILABLE_COLORS[colorIndex].bg;
 };
 
 // Función para resetear el mapa si es necesario (opcional)

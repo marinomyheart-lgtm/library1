@@ -18,6 +18,7 @@ export type Series = {
 export type Genre = {
   id: number
   name: string
+  description?: string  // <- Agregado aquí
 }
 
 export type Book = {
@@ -47,7 +48,7 @@ export type Book = {
   image_url?: string
   series?: Series
   series_id?: number
-  genres?: Genre[]
+  genres?: Genre[]  // <- Ahora cada Genre incluye description
   quotes?: Quote[]
 }
 

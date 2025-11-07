@@ -1,66 +1,111 @@
-"use client"
-
+// app/genres/page.tsx
 import { BookOpen, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import Link from "next/link"
+import { supabase } from "@/lib/supabaseClient"
+import { getGenreColor } from "@/lib/colors"
 
-const genresData = [
-  {
-    name: "Ciencia Ficción",
-    slug: "ciencia-ficcion",
-    count: 8,
-    percentage: 33,
-    color: "#e7f3f8",
-    description: "Exploración del futuro y la tecnología",
-    books: ["Dune", "1984", "Fundación", "Neuromante"],
-    avgRating: 4.3,
-  },
-  {
-    name: "Filosofía",
-    slug: "filosofia",
-    count: 5,
-    percentage: 21,
-    color: "#f8f3fc",
-    description: "Reflexiones sobre la existencia y el conocimiento",
-    books: ["El Principito", "Así habló Zaratustra", "Meditaciones"],
-    avgRating: 4.6,
-  },
-  {
-    name: "Realismo Mágico",
-    slug: "realismo-magico",
-    count: 4,
-    percentage: 17,
-    color: "#edf3ec",
-    description: "Realidad mezclada con elementos fantásticos",
-    books: ["Cien años de soledad", "La casa de los espíritus"],
-    avgRating: 4.8,
-  },
-  {
-    name: "Historia",
-    slug: "historia",
-    count: 4,
-    percentage: 17,
-    color: "#fbecdd",
-    description: "Eventos y personajes del pasado",
-    books: ["Sapiens", "El arte de la guerra", "Historia del tiempo"],
-    avgRating: 4.2,
-  },
-  {
-    name: "Biografía",
-    slug: "biografia",
-    count: 3,
-    percentage: 12,
-    color: "#fdebec",
-    description: "Vidas extraordinarias contadas",
-    books: ["Steve Jobs", "Einstein", "Leonardo da Vinci"],
-    avgRating: 4.1,
-  },
-]
+// Función para obtener datos de géneros desde Supabase
+async function getGenresData() {
+  try {
+    // Obtener todos los géneros con sus libros y descripción
+    const { data: genres, error: genresError } = await supabase
+      .from('genres')
+      .select(`
+        id,
+        name,
+        description,
+        book_genre(
+          book:books(
+            id,
+            title,
+            rating
+          )
+        )
+      `)
 
-export default function Genres() {
+    if (genresError) {
+      console.error("Error fetching genres:", genresError)
+      return []
+    }
+
+    // Procesar los datos para el formato del componente
+    const processedGenres = genres?.map(genre => {
+      // Extraer los libros del formato de relación de Supabase
+      const books = genre.book_genre?.map((bg: any) => bg.book) || []
+      const bookCount = books.length
+      
+      // Calcular rating promedio
+      const validRatings = books.filter((book: any) => book.rating !== null && book.rating !== undefined)
+      const avgRating = validRatings.length > 0 
+        ? Number((validRatings.reduce((sum: number, book: any) => sum + Number(book.rating), 0) / validRatings.length).toFixed(1))
+        : 0
+
+      // Obtener libros destacados
+      const featuredBooks = books
+        .slice(0, 4)
+        .map((book: any) => book.title)
+
+      return {
+        id: genre.id,
+        name: genre.name,
+        slug: genre.name.toLowerCase().replace(/\s+/g, '-'),
+        count: bookCount,
+        percentage: 0, // Se calculará después
+        color: getGenreColor(genre.name), // Usando la función importada
+        description: genre.description || "Colección diversa de libros", // Desde la BD
+        books: featuredBooks,
+        avgRating,
+      }
+    }).filter(genre => genre.count > 0) || []
+
+    // Calcular porcentajes después de tener todos los géneros
+    const totalBooks = processedGenres.reduce((sum, genre) => sum + genre.count, 0)
+    const genresWithPercentages = processedGenres.map(genre => ({
+      ...genre,
+      percentage: totalBooks > 0 ? Math.round((genre.count / totalBooks) * 100) : 0
+    })).sort((a, b) => b.count - a.count) // Ordenar por cantidad de libros
+
+    return genresWithPercentages
+
+  } catch (error) {
+    console.error("Error fetching genres:", error)
+    return []
+  }
+}
+
+export default async function Genres() {
+  const genresData = await getGenresData()
+
+  // Calcular estadísticas generales
+  const totalGenres = genresData.length
+  const favoriteGenre = genresData[0] || { name: "Ninguno", count: 0 }
+  const bestRatedGenre = genresData.reduce((best, current) => 
+    current.avgRating > best.avgRating ? current : best, 
+    { avgRating: 0, name: "Ninguno" }
+  )
+
+  if (totalGenres === 0) {
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: "#fcf1f6" }}>
+        <div className="container mx-auto px-4 py-8">
+          <Card className="bg-white/80 backdrop-blur-sm border-0">
+            <CardContent className="pt-6">
+              <div className="text-center py-8">
+                <BookOpen className="h-12 w-12 mx-auto text-pink-400 mb-4" />
+                <h3 className="text-lg font-semibold text-pink-800 mb-2">No hay géneros disponibles</h3>
+                <p className="text-pink-600">Agrega algunos libros a tu biblioteca para ver las estadísticas por género.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#fcf1f6" }}>
       <div className="container mx-auto px-4 py-8">
@@ -71,7 +116,7 @@ export default function Genres() {
               <CardTitle className="text-lg text-pink-700">Total de Géneros</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-pink-800">{genresData.length}</div>
+              <div className="text-3xl font-bold text-pink-800">{totalGenres}</div>
               <p className="text-sm text-pink-600">géneros explorados</p>
             </CardContent>
           </Card>
@@ -81,8 +126,8 @@ export default function Genres() {
               <CardTitle className="text-lg text-pink-700">Género Favorito</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-pink-800">{genresData[0].name}</div>
-              <p className="text-sm text-pink-600">{genresData[0].count} libros leídos</p>
+              <div className="text-xl font-bold text-pink-800">{favoriteGenre.name}</div>
+              <p className="text-sm text-pink-600">{favoriteGenre.count} libros leídos</p>
             </CardContent>
           </Card>
 
@@ -91,17 +136,17 @@ export default function Genres() {
               <CardTitle className="text-lg text-pink-700">Mejor Calificado</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-xl font-bold text-pink-800">Realismo Mágico</div>
-              <p className="text-sm text-pink-600">4.8 ⭐ promedio</p>
+              <div className="text-xl font-bold text-pink-800">{bestRatedGenre.name}</div>
+              <p className="text-sm text-pink-600">{bestRatedGenre.avgRating} ⭐ promedio</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Genres Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {genresData.map((genre, index) => (
+          {genresData.map((genre) => (
             <Card
-              key={index}
+              key={genre.id}
               className="group hover:shadow-xl transition-all duration-300 bg-white/80 backdrop-blur-sm border-0 overflow-hidden"
             >
               <div className={`h-2`} style={{ backgroundColor: genre.color }} />
@@ -180,13 +225,13 @@ export default function Genres() {
             <div className="space-y-4">
               <div className="text-sm text-muted-foreground">
                 <p>
-                  • Has explorado <strong>{genresData.length} géneros diferentes</strong> en tu biblioteca
+                  • Has explorado <strong>{totalGenres} géneros diferentes</strong> en tu biblioteca
                 </p>
                 <p>
-                  • Tu género favorito es <strong>{genresData[0].name}</strong> con {genresData[0].count} libros
+                  • Tu género favorito es <strong>{favoriteGenre.name}</strong> con {favoriteGenre.count} libros
                 </p>
                 <p>
-                  • El género mejor calificado es <strong>Realismo Mágico</strong> con 4.8 estrellas promedio
+                  • El género mejor calificado es <strong>{bestRatedGenre.name}</strong> con {bestRatedGenre.avgRating} estrellas promedio
                 </p>
                 <p>• Tienes una distribución equilibrada entre ficción y no ficción</p>
               </div>
