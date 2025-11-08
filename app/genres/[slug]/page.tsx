@@ -171,26 +171,30 @@ export default function GenreBooksPage() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#fcf1f6" }}>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
         {/* Header con Botón de Regreso */}
-        <div className="flex items-center gap-4 mb-2">
+        <div className="flex items-center gap-4 mb-3 sm:mb-4">
           <Link href="/genres">
-            <Button variant="outline" className="bg-transparent border-pink-200 text-pink-700 hover:bg-pink-100">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+            <Button variant="outline" size="sm" className="bg-transparent border-pink-200 text-pink-700 hover:bg-pink-100 text-sm">
+              <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
               Volver a Géneros
             </Button>
           </Link>
         </div>
 
         {/* Header del Género */}
-        <Card className="bg-white/80 backdrop-blur-sm border-0 mb-2 h-24 flex flex-col justify-center">
-          <CardHeader className="pb-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-3xl text-pink-800">{genre.name}</CardTitle>
-                <CardDescription className="text-lg mt-2 text-pink-600">{genre.description}</CardDescription>
+        <Card className="bg-white/80 backdrop-blur-sm border-0 mb-3 sm:mb-4 py-3 sm:py-0 sm:h-24 flex flex-col justify-center">
+          <CardHeader className="pb-2 sm:pb-4 px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
+              <div className="flex-1 min-w-0">
+                <CardTitle className="text-xl sm:text-2xl md:text-3xl text-pink-800 truncate">
+                  {genre.name}
+                </CardTitle>
+                <CardDescription className="text-sm sm:text-base md:text-lg mt-1 sm:mt-2 text-pink-600 line-clamp-2">
+                  {genre.description}
+                </CardDescription>
               </div>
-              <Badge variant="secondary" className="bg-pink-100 text-pink-800 text-lg px-4 py-2 pointer-events-none">
+              <Badge variant="secondary" className="bg-pink-100 text-pink-800 text-sm sm:text-base px-3 sm:px-4 py-1 sm:py-2 pointer-events-none w-fit self-end sm:self-auto">
                 {totalBooks} {totalBooks === 1 ? 'libro' : 'libros'}
               </Badge>
             </div>
@@ -198,38 +202,39 @@ export default function GenreBooksPage() {
         </Card>
 
         {/* Controles de Vista y Búsqueda */}
-        <div className="mb-2">
-          <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
+        <div className="mb-3 sm:mb-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-stretch sm:items-center">
             {/* Búsqueda */}
             <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-pink-400 h-5 w-5 z-10 pointer-events-none" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-pink-400 h-4 w-4 sm:h-5 sm:w-5 z-10 pointer-events-none" />
               <Input
                 placeholder="Buscar libros..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 h-9 bg-white/30 backdrop-blur-sm border-pink-200 rounded-xl text-pink-800 placeholder-pink-400 focus:ring-pink-300"
+                className="pl-9 sm:pl-10 h-9 sm:h-10 bg-white/30 backdrop-blur-sm border-pink-200 rounded-xl text-pink-800 placeholder-pink-400 focus:ring-pink-300 text-sm sm:text-base"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-pink-500 hover:text-pink-700"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-pink-500 hover:text-pink-700"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               )}
             </div>
 
             {/* Controles de Vista */}
-            <div className="flex items-center gap-2">              
+            <div className="flex items-center justify-center sm:justify-end gap-1 sm:gap-2">
               {/* List View */}
               <Button
                 variant={viewMode === "list" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setViewMode("list")}
-                className={buttonClass("list")}
+                className={`h-8 w-8 sm:h-9 sm:w-auto px-2 sm:px-3 ${buttonClass("list")}`}
                 title="Lista"
               >
-                <LayoutList className="h-4 w-4" />
+                <LayoutList className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline ml-1 sm:ml-2">Lista</span>
               </Button>
 
               {/* Grid Expanded View */}
@@ -237,10 +242,11 @@ export default function GenreBooksPage() {
                 variant={viewMode === "grid-expanded" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setViewMode("grid-expanded")}
-                className={buttonClass("grid-expanded")}
+                className={`h-8 w-8 sm:h-9 sm:w-auto px-2 sm:px-3 ${buttonClass("grid-expanded")}`}
                 title="Grid Expandido"
               >
-                <Rows3 className="h-4 w-4" />
+                <Rows3 className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline ml-1 sm:ml-2">Grid</span>
               </Button>
 
               {/* Carousel View */}
@@ -248,10 +254,11 @@ export default function GenreBooksPage() {
                 variant={viewMode === "carousel" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setViewMode("carousel")}
-                className={buttonClass("carousel")}
+                className={`h-8 w-8 sm:h-9 sm:w-auto px-2 sm:px-3 ${buttonClass("carousel")}`}
                 title="Carrusel"
               >
-                <GripHorizontal className="h-4 w-4" />
+                <GripHorizontal className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline ml-1 sm:ml-2">Carrusel</span>
               </Button>
             </div>
           </div>
@@ -259,12 +266,12 @@ export default function GenreBooksPage() {
 
         {/* Vista de Libros */}
         {filteredBooks.length === 0 ? (
-          <div className="text-center py-8">
-            <BookOpen className="h-12 w-12 mx-auto text-pink-400 mb-4" />
-            <h3 className="text-lg font-semibold text-pink-800 mb-2">
+          <div className="text-center py-8 sm:py-12">
+            <BookOpen className="h-8 w-8 sm:h-12 sm:w-12 mx-auto text-pink-400 mb-3 sm:mb-4" />
+            <h3 className="text-base sm:text-lg font-semibold text-pink-800 mb-2">
               {searchQuery ? "No se encontraron libros" : "No hay libros en este género"}
             </h3>
-            <p className="text-pink-600">
+            <p className="text-pink-600 text-sm sm:text-base">
               {searchQuery 
                 ? "Intenta con otros términos de búsqueda."
                 : "Agrega algunos libros a este género para verlos aquí."
@@ -280,29 +287,29 @@ export default function GenreBooksPage() {
         )}
 
         {/* Tendencias del Género */}
-        <Card className="mt-2 bg-white/80 backdrop-blur-sm border-0 ">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-pink-800">
-              <TrendingUp className="h-5 w-5" />
+        <Card className="mt-4 sm:mt-6 bg-white/80 backdrop-blur-sm border-0">
+          <CardHeader className="px-4 sm:px-6 py-4 sm:py-6">
+            <CardTitle className="flex items-center gap-2 text-pink-800 text-lg sm:text-xl">
+              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
               Estadísticas de {genre.name}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="text-sm text-pink-600">
-                <p>
+          <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="text-xs sm:text-sm text-pink-600 space-y-1 sm:space-y-2">
+                <p className="leading-relaxed">
                   • <strong>{favoriteBooks} libros</strong> marcados como favoritos en este género
                 </p>
-                <p>
+                <p className="leading-relaxed">
                   • El libro mejor calificado tiene <strong>{bestRatedBook}/10</strong> puntos
                 </p>
-                <p>
+                <p className="leading-relaxed">
                   • Has leído <strong>{totalPages} páginas</strong> en total de este género
                 </p>
-                <p>
+                <p className="leading-relaxed">
                   • Rating promedio: <strong>{avgRating}/10</strong> estrellas
                 </p>
-                <p>
+                <p className="leading-relaxed">
                   • Representa el <strong>{((totalBooks / 50) * 100).toFixed(1)}%</strong> de tu biblioteca total
                 </p>
               </div>
