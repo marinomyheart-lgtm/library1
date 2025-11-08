@@ -199,16 +199,16 @@ export default function HomePage() {
       }
     })
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-v50">
-        <div className="text-center">
-          <div className="loading h-12 w-12 border-t-2 border-v500 mx-auto mb-4"></div>
-          <p className="text">Loading your library...</p>
+    if (loading) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-v50">
+          <div className="text-center">
+            <div className="loading h-12 w-12 border-t-2 border-v500 mx-auto mb-4"></div>
+            <p className="text">Loading your library...</p>
+          </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
 
   return (
     <div className="min-h-screen bg-v50">

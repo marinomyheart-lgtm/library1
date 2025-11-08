@@ -111,7 +111,7 @@ export default async function Genres() {
       <div className="container mx-auto px-4 py-8">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+          <Card className="bg-white/80 backdrop-blur-sm border-0 h-28 flex flex-col justify-center">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg text-pink-700">Total de Géneros</CardTitle>
             </CardHeader>
@@ -121,7 +121,7 @@ export default async function Genres() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+          <Card className="bg-white/80 backdrop-blur-sm border-0 h-28 flex flex-col justify-center">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg text-pink-700">Género Favorito</CardTitle>
             </CardHeader>
@@ -131,7 +131,7 @@ export default async function Genres() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+          <Card className="bg-white/80 backdrop-blur-sm border-0 h-28 flex flex-col justify-center">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg text-pink-700">Mejor Calificado</CardTitle>
             </CardHeader>
